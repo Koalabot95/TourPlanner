@@ -3,6 +3,12 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Ignoriere alle Uploads
+uploads/*
+
+# ...außer die .gitkeep Datei, damit der Ordner im Repo bleibt
+!uploads/.gitkeep
+
 # User-specific files
 *.rsuser
 *.suo
