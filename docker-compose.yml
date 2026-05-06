@@ -10,10 +10,17 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      # Initialisiert die DB beim ersten Start
       - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
-      # Speichert Daten dauerhaft
-      - postgres_data:/var/lib/postgresql/data
+      - ./database/postgres_data:/var/lib/postgresql/data
 
-volumes:
-  postgres_data:
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: tourplanner_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
