@@ -9,6 +9,9 @@ uploads/*
 # ...außer die .gitkeep Datei, damit der Ordner im Repo bleibt
 !uploads/.gitkeep
 
+# Docker Daten
+database/postgres_data/
+
 # User-specific files
 *.rsuser
 *.suo

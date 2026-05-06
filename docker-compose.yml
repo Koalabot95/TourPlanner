@@ -1,0 +1,19 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: tourplanner_db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tourplanner
+    ports:
+      - "5432:5432"
+    volumes:
+      # Initialisiert die DB beim ersten Start
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      # Speichert Daten dauerhaft
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
