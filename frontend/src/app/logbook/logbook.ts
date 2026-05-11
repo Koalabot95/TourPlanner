@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { Navbar } from '../navbar/navbar';
 
 @Component({
   selector: 'app-logbook',
-  imports: [],
+  imports: [Navbar],
   templateUrl: './logbook.html',
   styleUrl: './logbook.scss',
 })
