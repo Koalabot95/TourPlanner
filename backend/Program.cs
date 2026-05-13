@@ -9,7 +9,7 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 // 2. Datenbank-Anbindung
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<TourContext>(options =>
+builder.Services.AddDbContext<TourPlannerContext>(options =>
     options.UseNpgsql(connectionString));
 
 // 3. CORS - Erlaubt den Zugriff vom Frontend

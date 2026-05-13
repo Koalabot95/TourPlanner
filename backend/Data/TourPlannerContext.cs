@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using backend.Models;                
 namespace backend.Data
 {
-    public class TourContext : DbContext
+    public class TourPlannerContext : DbContext
     {
-        public TourContext(DbContextOptions<TourContext> options) : base(options) { }
+        public TourPlannerContext(DbContextOptions<TourPlannerContext> options) : base(options) { }
 
         // Definieren der Tabllen
         public DbSet<User> Users { get; set; }
