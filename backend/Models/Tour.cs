@@ -3,6 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace backend.Models
 {
+
+    public enum TransportMode
+    {
+        Walking,
+        Cycling,
+        Driving
+    }
     public class Tour
     {
         [Key]
@@ -10,11 +17,11 @@ namespace backend.Models
         public Guid UserId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public string? StartLocation { get; set; }
-        public string? EndLocation { get; set; }
+        public string StartLocation { get; set; } = string.Empty;
+        public string EndLocation { get; set; } = string.Empty;
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public string? TransportType { get; set; }
+        public TransportMode TransportType { get; set; } = TransportMode.Walking;
         public double Distance { get; set; }
         public double EstimatedTime { get; set; }
         public string? RouteInformation { get; set; }
