@@ -16,8 +16,8 @@ CREATE TABLE tours (
     user_id UUID REFERENCES users(user_id) ON DELETE CASCADE,
     name VARCHAR(100) NOT NULL,
     description TEXT,
-    start_location VARCHAR(255),
-    end_location VARCHAR(255),
+    start_location VARCHAR(255) NOT NULL,
+    end_location VARCHAR(255) NOT NULL,
     start_date TIMESTAMP NOT NULL, 
     end_date TIMESTAMP NOT NULL,   
     transport_type VARCHAR(50),    -- enum
