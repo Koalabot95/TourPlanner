@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
 
-import { Login } from './login/login';
-import { Dashboard } from './dashboard/dashboard';
-import { TourPlanner } from './tour-planner/tour-planner';
-import { Logbook } from './logbook/logbook';
-import { Profile } from './profile/profile';
+import { Login } from './pages/login/login';
+import { Dashboard } from './pages/dashboard/dashboard';
+import { TourPlanner } from './pages/tour-planner/tour-planner';
+import { Logbook } from './pages/logbook/logbook';
+import { Profile } from './pages/profile/profile';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
