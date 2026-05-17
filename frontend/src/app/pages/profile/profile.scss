@@ -4,7 +4,7 @@
 }
 
 .profile-wrapper {
-  background-color: white;
+  // background-color: white;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   overflow: hidden; /* Important so the dark header stays inside rounded corners */
@@ -13,8 +13,8 @@
 }
 
 .profile-header {
-  background-color: #111827;
-  color: white;
+  // background-color: #111827;
+  // color: white;
   padding: 2rem;
   display: flex;
   align-items: center;
@@ -23,7 +23,8 @@
   .avatar {
     width: 80px;
     height: 80px;
-    background-color: #374151;
+    // background-color: #374151;
+    border: 1px solid #afb0b3;
     border-radius: 50%;
     display: flex;
     align-items: center;
