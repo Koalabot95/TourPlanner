@@ -32,9 +32,18 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// 5. Auth Services
+builder.Services.AddScoped<backend.Interfaces.IUserRepository, backend.Repositories.UserRepository>();
+builder.Services.AddScoped<backend.Services.AuthService>();
+
+
+// 6. log4net
+var logRepository = log4net.LogManager.GetRepository(System.Reflection.Assembly.GetEntryAssembly()!);
+log4net.Config.XmlConfigurator.Configure(logRepository, new System.IO.FileInfo("Logging/log4net.config"));
+
 var app = builder.Build();
 
-// 5. Middleware Pipeline
+// 7. Middleware Pipeline
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -51,7 +60,7 @@ app.UseCors("AllowAll");
 // Für Login
 app.UseAuthorization(); 
 
-// 6. Controller-Routen aktivieren 
+// 8. Controller-Routen aktivieren 
 app.MapControllers(); 
 
 app.Run();

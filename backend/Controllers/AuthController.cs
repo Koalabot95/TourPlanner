@@ -1,0 +1,28 @@
+﻿using backend.DTOs;
+using backend.Services;
+using Microsoft.AspNetCore.Mvc;
+
+namespace backend.Controllers;
+
+[ApiController]
+[Route("api/auth")]
+public class AuthController : ControllerBase
+{
+    private readonly AuthService _authService;
+
+    public AuthController(AuthService authService)
+    {
+        _authService = authService;
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register([FromBody] RegisterDto dto)
+    {
+        var (success, field, message, userId) = await _authService.RegisterAsync(dto);
+
+        if (!success)
+            return Conflict(new { field, message });
+
+        return StatusCode(201, new { userId });
+    }
+}
