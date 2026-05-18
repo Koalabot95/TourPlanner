@@ -26,5 +26,8 @@ namespace backend.Repositories
             await _context.SaveChangesAsync();
             return user.UserId;
         }
+
+        public async Task<User?> GetByUsernameAsync(string username)
+           => await _context.Users.FirstOrDefaultAsync(u => u.Username == username);
     }
 }

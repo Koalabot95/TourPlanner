@@ -41,7 +41,7 @@ namespace backend.Data
                 .HasMaxLength(100);
             entity.HasIndex(u => u.Email).IsUnique();
 
-            entity.Property(u => u.PasswordHash) // Achte darauf, dass das Property in deinem Model so heißt
+            entity.Property(u => u.PasswordHash) 
                 .HasColumnName("password_hash")
                 .IsRequired();
 
@@ -167,7 +167,7 @@ namespace backend.Data
                 .HasColumnName("file_path")
                 .IsRequired();
 
-            entity.Property(i => i.Caption) // Das fehlte noch
+            entity.Property(i => i.Caption) 
                 .HasColumnName("caption");
 
             // Zeitstempel

@@ -1,4 +1,5 @@
 ﻿using Moq;
+using Microsoft.Extensions.Configuration;
 using backend.DTOs;
 using backend.Interfaces;
 using backend.Models;
@@ -10,14 +11,21 @@ namespace Tests;
 public class AuthServiceTests
 {
     private Mock<IUserRepository> _mockRepo;
+    private Mock<IConfiguration> _mockConfig;
     private AuthService _authService;
     private RegisterDto _validDto;
+    private LoginDto _validLoginDto;
 
     [SetUp]
     public void SetUp()
     {
         _mockRepo = new Mock<IUserRepository>();
-        _authService = new AuthService(_mockRepo.Object);
+        _mockConfig = new Mock<IConfiguration>();
+
+        // Simulate JWT secret from appsettings.json
+        _mockConfig.Setup(c => c["Jwt:Secret"]).Returns("Xk9#mP2$vL7nQw4@jR6yTb8&hF3eDcZ1");
+
+        _authService = new AuthService(_mockRepo.Object, _mockConfig.Object);
 
         // Valid registration data used as default for all tests
         _validDto = new RegisterDto
@@ -27,10 +35,17 @@ public class AuthServiceTests
             Password = "Secure!123"
         };
 
+        _validLoginDto = new LoginDto
+        {
+            Username = "Melanie_99",
+            Password = "Secure!123"
+        };
+
         // Default setup: nothing exists in DB, user creation succeeds
         _mockRepo.Setup(r => r.UsernameExistsAsync(It.IsAny<string>())).ReturnsAsync(false);
         _mockRepo.Setup(r => r.EmailExistsAsync(It.IsAny<string>())).ReturnsAsync(false);
         _mockRepo.Setup(r => r.CreateUserAsync(It.IsAny<User>())).ReturnsAsync(Guid.NewGuid());
+        _mockRepo.Setup(r => r.GetByUsernameAsync(It.IsAny<string>())).ReturnsAsync((User?)null);
     }
 
     // Test: valid registration data should return success
@@ -161,5 +176,73 @@ public class AuthServiceTests
         var result = await _authService.RegisterAsync(_validDto);
 
         Assert.That(result.message, Is.Not.Empty);
+    }
+
+    // Test: login with non-existing username should fail
+    [Test]
+    public async Task Login_UsernameNotFound_ReturnsUnauthorized()
+    {
+        _mockRepo.Setup(r => r.GetByUsernameAsync(_validLoginDto.Username)).ReturnsAsync((User?)null);
+
+        var result = await _authService.LoginAsync(_validLoginDto);
+
+        Assert.That(result.success, Is.False);
+        Assert.That(result.message, Is.Not.Empty);
+    }
+
+    // Test: login with wrong password should fail
+    [Test]
+    public async Task Login_WrongPassword_ReturnsUnauthorized()
+    {
+        var user = new User
+        {
+            UserId = Guid.NewGuid(),
+            Username = _validLoginDto.Username,
+            Email = "melanie@example.com",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("DifferentPassword!1")
+        };
+        _mockRepo.Setup(r => r.GetByUsernameAsync(_validLoginDto.Username)).ReturnsAsync(user);
+
+        var result = await _authService.LoginAsync(_validLoginDto);
+
+        Assert.That(result.success, Is.False);
+    }
+
+    // Test: login with correct credentials should return a JWT token
+    [Test]
+    public async Task Login_ValidCredentials_ReturnsToken()
+    {
+        var user = new User
+        {
+            UserId = Guid.NewGuid(),
+            Username = _validLoginDto.Username,
+            Email = "melanie@example.com",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(_validLoginDto.Password)
+        };
+        _mockRepo.Setup(r => r.GetByUsernameAsync(_validLoginDto.Username)).ReturnsAsync(user);
+
+        var result = await _authService.LoginAsync(_validLoginDto);
+
+        Assert.That(result.success, Is.True);
+        Assert.That(result.token, Is.Not.Empty);
+    }
+
+    // Test: returned JWT token must contain three parts separated by dots
+    [Test]
+    public async Task Login_ValidCredentials_ReturnsValidJwtFormat()
+    {
+        var user = new User
+        {
+            UserId = Guid.NewGuid(),
+            Username = _validLoginDto.Username,
+            Email = "melanie@example.com",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(_validLoginDto.Password)
+        };
+        _mockRepo.Setup(r => r.GetByUsernameAsync(_validLoginDto.Username)).ReturnsAsync(user);
+
+        var result = await _authService.LoginAsync(_validLoginDto);
+
+        // JWT format: header.claims.signature
+        Assert.That(result.token.Split('.').Length, Is.EqualTo(3));
     }
 }
