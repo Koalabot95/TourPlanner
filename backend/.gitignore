@@ -11,6 +11,12 @@
 backend/Uploads/*
 !backend/Uploads/.gitkeep
 
+# Visual Studio
+.vs/
+
+# Database data
+database/postgres_data/
+
 # VS Code Verzeichnis
 .vscode/
 *.us
