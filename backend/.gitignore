@@ -7,6 +7,19 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/Dotnet.gitignore
 
+# Ignoriere alle Bilder im Uploads-Ordner
+backend/Uploads/*
+!backend/Uploads/.gitkeep
+
+# VS Code Verzeichnis
+.vscode/
+*.us
+*.suo
+
+# Log-Dateien des Frameworks
+*.log
+backend/Logging/*.log
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
