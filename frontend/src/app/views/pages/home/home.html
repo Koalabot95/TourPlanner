@@ -1,41 +1,51 @@
 <app-navbar></app-navbar>
-
 <div class="page-container">
-  <h2 class="mb-title">Home</h2>
-  <br />
-  <h3>Tours</h3>
-  <div style="display: flex">
-    <div class="card tour-card">
-      <h4>Mountain Trail</h4>
-      <p class="text-muted">Difficulty: Hard | Distance: 15 km</p>
-      <p class="text-muted">
-        Description: A challenging trail through rugged mountain terrain with stunning views.
-      </p>
+  <div class="split-layout">
+    <!-- LEFT SIDE: TOURS -->
+    <div class="tours-section">
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <h2>My Tours</h2>
+        <button class="btn-primary" routerLink="/create-tour">+ New Tour</button>
+      </div>
+      <br />
+
+      <!-- Empty State -->
+      <div class="card" *ngIf="tours.length === 0">
+        <p>You haven't created any tours yet.</p>
+      </div>
+
+      <!-- Loop through tours -->
+      <div class="card mb-3" *ngFor="let tour of tours">
+        <h3 style="margin-top: 0">{{ tour.name }}</h3>
+        <p><strong>Route:</strong> {{ tour.from }} ➔ {{ tour.to }}</p>
+        <p><strong>Transport:</strong> {{ tour.transportType }}</p>
+        <p *ngIf="tour.description">{{ tour.description }}</p>
+      </div>
     </div>
-    <div class="card tour-card">
-      <h4>City Tour</h4>
-      <p class="text-muted">Difficulty: Easy | Distance: 5 km</p>
-      <p class="text-muted">
-        Description: A leisurely walk through the city's historic landmarks and vibrant
-        neighborhoods.
-      </p>
+
+    <!-- RIGHT SIDE: TOUR LOGS -->
+    <div class="logs-section">
+      <div style="display: flex; justify-content: space-between; align-items: center">
+        <h2>Recent Logs</h2>
+        <button class="btn-primary" routerLink="/create-tour-log">+ New Log</button>
+      </div>
+      <br />
+
+      <!-- Empty State -->
+      <div class="card" *ngIf="tourLogs.length === 0">
+        <p>No logs recorded yet.</p>
+      </div>
+
+      <!-- Loop through logs -->
+      <div class="card mb-3" *ngFor="let log of tourLogs">
+        <h3 style="margin-top: 0">{{ log.tourName }}</h3>
+        <p><strong>Date:</strong> {{ log.date }}</p>
+        <p><strong>Stats:</strong> {{ log.distance }} km in {{ log.time }} hrs</p>
+        <p><strong>Rating:</strong> {{ log.rating }} / 5</p>
+        <p *ngIf="log.notes">
+          <em>"{{ log.notes }}"</em>
+        </p>
+      </div>
     </div>
-  </div>
-  <br />
-  <h3>Tour Logs</h3>
-  <div style="display: flex">
-    <div class="card log-card">
-      <h4>Mountain Trail Log</h4>
-      <p class="text-muted">Date: 2026-04-28 | Rating: ★★★★☆</p>
-      <p class="text-muted">
-        Notes: Beautiful scenery but very tough. Took us 3.5 hours to complete.
-      </p>
-    </div>
-    <div class="card log-card">
-      <h4>City Tour Log</h4>
-      <p class="text-muted">Date: 2026-05-02 | Rating: ★★★☆☆</p>
-      <p class="text-muted">
-        Notes: Nice walk but a bit crowded. Took us 1.5 hours to complete.
-      </p>
   </div>
 </div>

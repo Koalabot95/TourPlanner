@@ -2,10 +2,11 @@
 <div class="page-container flex-center">
   <div class="profile-wrapper">
     <div class="profile-header">
-      <div class="avatar">U</div>
+      <!-- Dynamically grab the first letter of the user's first name -->
+      <div class="avatar">{{ user.firstName.charAt(0) }}</div>
       <div class="user-info">
-        <h2>User</h2>
-        <p>Member since 2026-05-01</p>
+        <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+        <p>Member since {{ user.joinDate }}</p>
       </div>
     </div>
 
@@ -13,27 +14,29 @@
       <div class="info-grid">
         <div class="info-item">
           <label>First Name</label>
-          <p>John</p>
+          <p>{{ user.firstName }}</p>
         </div>
         <div class="info-item">
           <label>Last Name</label>
-          <p>Doe</p>
+          <p>{{ user.lastName }}</p>
         </div>
       </div>
 
       <div class="info-item full-width">
         <label>Email</label>
-        <p>adventurer&#64;email.com</p>
+        <p>{{ user.email }}</p>
       </div>
 
       <div class="info-item full-width">
         <label>Bio</label>
-        <p>Passionate hiker and cyclist exploring the world one trail at a time.</p>
+        <p>{{ user.bio }}</p>
       </div>
 
       <div class="action-buttons">
-        <button class="btn-secondary profile-btn" routerLink="/login">Sign out</button>
-        <button class="btn-danger profile-btn">Delete Account</button>
+        <button class="btn-secondary profile-btn" (click)="signOut()" routerLink="/login">
+          Sign out
+        </button>
+        <button class="btn-danger profile-btn" (click)="deleteAccount()">Delete Account</button>
       </div>
     </div>
   </div>
