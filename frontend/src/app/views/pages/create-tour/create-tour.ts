@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { Navbar } from '../../components/navbar/navbar';
 
 @Component({
-  selector: 'app-logbook',
+  selector: 'app-create-tour',
   imports: [Navbar],
-  templateUrl: './logbook.html',
-  styleUrl: './logbook.scss',
+  templateUrl: './create-tour.html',
+  styleUrl: './create-tour.scss',
 })
-export class Logbook {}
+export class CreateTour {}

@@ -1,0 +1,47 @@
+<app-navbar></app-navbar>
+<div class="page-container">
+  <div class="card form-section">
+    <h2 class="mb-title">Create Tour Log</h2>
+    <br />
+    <div class="form-group">
+      <label>Tour</label>
+      <select class="form-control">
+        <option>Mountain Trail</option>
+        <option>City Tour</option>
+        <option>Lakeside Walk</option>
+        <option>Forest Hike</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Date</label>
+      <input type="date" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label>Distance (km)</label>
+      <input type="number" class="form-control" placeholder="Enter distance" />
+    </div>
+    <div class="form-group">
+      <label>Time (hrs)</label>
+      <input type="number" class="form-control" placeholder="Enter time taken" />
+    </div>
+    <div class="form-group">
+      <label>Rating</label>
+      <select class="form-control">
+        <option>1 - Poor</option>
+        <option>2 - Fair</option>
+        <option>3 - Good</option>
+        <option>4 - Very Good</option>
+        <option>5 - Excellent</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Notes</label>
+      <textarea
+        class="form-control"
+        rows="3"
+        placeholder="Enter any notes about the tour"
+      ></textarea>
+    </div>
+    <button class="btn-primary save-btn">Save Log</button>
+  </div>
+</div>

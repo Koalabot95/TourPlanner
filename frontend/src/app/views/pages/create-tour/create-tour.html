@@ -1,17 +1,13 @@
 <app-navbar></app-navbar>
 <div class="page-container">
-  <div class="header-actions">
-    <h2>Tour Creator</h2>
-    <button class="btn-primary save-btn">Save Tour</button>
-  </div>
-
   <div class="split-layout">
     <div class="card form-section">
+      <h2>Create Tour</h2>
       <div class="form-group">
         <label>Tour Name</label>
-        <input type="text" class="form-control" placeholder="Enter tour name">
+        <input type="text" class="form-control" placeholder="Enter tour name" />
       </div>
-      
+
       <div class="form-group">
         <label>Description</label>
         <textarea class="form-control" rows="3" placeholder="Enter description"></textarea>
@@ -20,11 +16,11 @@
       <div class="form-row">
         <div class="form-group half-width">
           <label>From</label>
-          <input type="text" class="form-control" placeholder="Start location">
+          <input type="text" class="form-control" placeholder="Start location" />
         </div>
         <div class="form-group half-width">
           <label>To</label>
-          <input type="text" class="form-control" placeholder="End location">
+          <input type="text" class="form-control" placeholder="End location" />
         </div>
       </div>
 
@@ -40,24 +36,25 @@
       <div class="form-row">
         <div class="form-group half-width">
           <label>Begin Date</label>
-          <input type="date" class="form-control">
+          <input type="date" class="form-control" />
         </div>
         <div class="form-group half-width">
           <label>End Date</label>
-          <input type="date" class="form-control">
+          <input type="date" class="form-control" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group half-width">
           <label>Distance</label>
-          <input type="text" class="form-control bg-gray" value="Auto-calculated" disabled>
+          <input type="text" class="form-control bg-gray" value="Auto-calculated" disabled />
         </div>
         <div class="form-group half-width">
           <label>Est. Time</label>
-          <input type="text" class="form-control bg-gray" value="Auto-calculated" disabled>
+          <input type="text" class="form-control bg-gray" value="Auto-calculated" disabled />
         </div>
       </div>
+      <button class="btn-primary save-btn">Save Tour</button>
     </div>
 
     <div class="map-preview">
