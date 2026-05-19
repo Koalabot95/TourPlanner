@@ -12,7 +12,6 @@ namespace backend.Models
     }
     public class Tour
     {
-        [Key]
         public Guid TourId { get; set; }
         public Guid UserId { get; set; }
         public string Name { get; set; } = string.Empty;

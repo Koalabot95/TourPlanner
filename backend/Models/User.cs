@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace backend.Models;
 
-[Table("users")]
 public class User
 {
-    [Key]
     public Guid UserId { get; set; }
     public string Username { get; set; } = null!;
     public string PasswordHash { get; set; } = null!;
