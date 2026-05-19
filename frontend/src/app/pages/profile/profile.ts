@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Navbar } from '../../components/navbar/navbar';
+import { Button } from '../../components/button/button';
 import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
-  imports: [Navbar, RouterLink],
+  imports: [Navbar, RouterLink, Button],
   templateUrl: './profile.html',
   styleUrl: './profile.scss',
 })

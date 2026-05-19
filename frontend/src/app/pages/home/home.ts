@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Navbar } from '../../components/navbar/navbar';
+import { Button } from '../../components/button/button';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, Navbar],
+  imports: [CommonModule, Navbar, RouterLink, Button],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

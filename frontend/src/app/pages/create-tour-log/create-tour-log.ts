@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { Navbar } from '../../components/navbar/navbar';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Button } from '../../components/button/button';
 
 @Component({
   selector: 'app-create-tour-log',
-  imports: [Navbar, FormsModule],
+  imports: [Navbar, Button, FormsModule],
   templateUrl: './create-tour-log.html',
   styleUrl: './create-tour-log.scss',
 })

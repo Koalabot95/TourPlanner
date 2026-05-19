@@ -33,10 +33,10 @@
       </div>
 
       <div class="action-buttons">
-        <button class="btn-secondary profile-btn" (click)="signOut()" routerLink="/login">
+        <app-button variant="secondary" (buttonClick)="signOut()" routerLink="/login">
           Sign out
-        </button>
-        <button class="btn-danger profile-btn" (click)="deleteAccount()">Delete Account</button>
+        </app-button>
+        <app-button variant="danger" (buttonClick)="deleteAccount()">Delete Account</app-button>
       </div>
     </div>
   </div>
