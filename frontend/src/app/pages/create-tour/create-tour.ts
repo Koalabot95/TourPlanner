@@ -3,6 +3,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Navbar } from '../../components/navbar/navbar';
 import { Button } from '../../components/button/button';
+import { Tour } from '../../models/tour.model';
+import { TransportType } from '../../models/enums.model';
 
 @Component({
   selector: 'app-create-tour',
@@ -12,16 +14,22 @@ import { Button } from '../../components/button/button';
 })
 export class CreateTour {
   // The ViewModel State
-  tour = {
+  tour: Tour = {
+    userId: 'default-user-id', // Placeholder user ID, replace with actual user management logic
+    tourId: 'tour-' + Date.now(), // Generate a unique tour ID based on timestamp
     name: '',
     description: '',
-    from: '',
-    to: '',
-    transportType: 'Walking', // Default selection
-    beginDate: '',
+    startLocation: '',
+    endLocation: '',
+    startDate: '',
     endDate: '',
-    distance: null,
-    estimatedTime: null,
+    transportType: TransportType.Hike, // Default transport type
+    distance: 0,
+    estimatedTime: 0,
+    routeInformation: '',
+    mapSnapshotPath: '',
+    popularity: 0,
+    childfriendliness: 0,
   };
 
   constructor(private router: Router) {} // Inject Router

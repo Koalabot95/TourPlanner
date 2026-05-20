@@ -3,6 +3,8 @@ import { Navbar } from '../../components/navbar/navbar';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Button } from '../../components/button/button';
+import { TourLog } from '../../models/tour-log.model';
+import { Difficulty } from '../../models/enums.model';
 
 @Component({
   selector: 'app-create-tour-log',
@@ -11,13 +13,16 @@ import { Button } from '../../components/button/button';
   styleUrl: './create-tour-log.scss',
 })
 export class CreateTourLog {
-  tourLog = {
-    tourName: 'Mountain Trail', // Default selection
-    date: '',
-    distance: null,
-    time: null,
-    rating: '3', // Default to Good
-    notes: '',
+  tourLog: TourLog = {
+    logId: '',
+    tourId: '',
+    name: '',
+    dateTime: new Date(),
+    comment: '',
+    difficulty: Difficulty.Easy,
+    totalDistance: 0,
+    totalTime: 0,
+    rating: 0,
   };
 
   constructor(private router: Router) {}

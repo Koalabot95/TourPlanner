@@ -34,8 +34,8 @@
           <input
             type="text"
             class="form-control"
-            name="from"
-            [(ngModel)]="tour.from"
+            name="startLocation"
+            [(ngModel)]="tour.startLocation"
             placeholder="Start location"
           />
         </div>
@@ -44,8 +44,8 @@
           <input
             type="text"
             class="form-control"
-            name="to"
-            [(ngModel)]="tour.to"
+            name="endLocation"
+            [(ngModel)]="tour.endLocation"
             placeholder="End location"
           />
         </div>
@@ -54,7 +54,7 @@
       <div class="form-group">
         <label>Choose Transport Type</label>
         <select class="form-control" name="transportType" [(ngModel)]="tour.transportType">
-          <option value="Walking">Walking</option>
+          <option value="Hike">Hike</option>
           <option value="Cycling">Cycling</option>
           <option value="Driving">Driving</option>
         </select>
@@ -63,7 +63,7 @@
       <div class="form-row">
         <div class="form-group half-width">
           <label>Begin Date</label>
-          <input type="date" class="form-control" name="beginDate" [(ngModel)]="tour.beginDate" />
+          <input type="date" class="form-control" name="startDate" [(ngModel)]="tour.startDate" />
         </div>
         <div class="form-group half-width">
           <label>End Date</label>
@@ -97,7 +97,7 @@
     </form>
 
     <div class="map-preview">
-      <span>Map Preview for: {{ tour.from }} to {{ tour.to }}</span>
+      <span>Map Preview for: {{ tour.startLocation }} to {{ tour.endLocation }}</span>
     </div>
   </div>
 </div>
