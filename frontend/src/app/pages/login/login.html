@@ -2,6 +2,12 @@
   <form class="card login-card" (ngSubmit)="login()">
     <h2 class="title">Welcome Back</h2>
 
+    @if (errorMessage) {
+      <div class="error-banner">
+        {{ errorMessage }}
+      </div>
+    }
+
     <div class="form-group">
       <label>Username</label>
       <input
@@ -26,7 +32,7 @@
       />
     </div>
 
-    <app-button variant="primary" (buttonClick)="login()"> Sign In </app-button>
+    <app-button variant="primary" type="submit"> Sign In </app-button>
 
     <p class="signup-prompt">Need an account? <a routerLink="/register">Sign up</a></p>
   </form>

@@ -105,6 +105,10 @@ namespace backend.Data
         //TourLog Mapping
         modelBuilder.Entity<TourLog>(entity =>
         {
+
+            entity.ToTable("tour_logs"); 
+            entity.HasKey(l => l.LogId);
+
             // Primary & Foreign Key
             entity.Property(l => l.LogId)
                 .HasColumnName("log_id")
