@@ -4,24 +4,25 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. PostgreSQL Zeitstempel
+// 1. CORS -> erlaubt Anbdinung ans Frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AngularDevPolicy", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") 
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+// 2. PostgreSQL Zeitstempel
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-// 2. Datenbank-Anbindung
+// 3. Datenbank-Anbindung
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<TourPlannerContext>(options =>
     options.UseNpgsql(connectionString));
 
-// 3. CORS - Erlaubt den Zugriff vom Frontend
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
-});
 
 // 4. Controller & Enum-Konvertierung
 builder.Services.AddControllers()
@@ -44,6 +45,7 @@ log4net.Config.XmlConfigurator.Configure(logRepository, new System.IO.FileInfo("
 var app = builder.Build();
 
 // 7. Middleware Pipeline
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -54,8 +56,14 @@ if (app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
+// CORS-Middleware aktivieren
+app.UseRouting();
+
 // CORS anwenden (vor MapControllers)
-app.UseCors("AllowAll");
+app.UseCors("AngularDevPolicy");
+
+// Autorisierung
+app.UseAuthentication();
 
 // Für Login
 app.UseAuthorization(); 

@@ -1,0 +1,108 @@
+# -------------------------------------------------------------------
+# 1. DATENBANK & AKZEPTIERTE UPLOADS
+# -------------------------------------------------------------------
+# ostgreSQL Live-Daten überall im Projekt
+**/postgres_data/
+
+# Ignoriere hochgeladene Bilder im Backend, behalte die .gitkeep Strukturdatei
+**/backend/Uploads/*
+!**/backend/Uploads/.gitkeep
+
+# -------------------------------------------------------------------
+# 2. FRONTEND (Angular & Node)
+# -------------------------------------------------------------------
+# Abhängigkeiten und Caches
+**/node_modules/
+**/.angular/cache/
+**/.sass-cache/
+
+# Build- und Kompilierungs-Outputs
+**/dist/
+**/tmp/
+**/out-tsc/
+**/bazel-out/
+**/coverage/
+
+# Logs und Locks
+**/npm-debug.log
+**/yarn-error.log
+**/connect.lock
+**/libpeerconnection.log
+**/testem.log
+**/typings/
+**/__screenshots__/
+
+# -------------------------------------------------------------------
+# 3. BACKEND (.NET Core & C#)
+# -------------------------------------------------------------------
+# Build-Ergebnisse (Binärdateien und Zwischenspeicher)
+**/[Dd]ebug/
+**/[Dd]ebugPublic/
+**/[Rr]elease/
+**/[Rr]eleases/
+**/x64/
+**/x86/
+**/[Ww][Ii][Nn]32/
+**/[Aa][Rr][Mm]/
+**/[Aa][Rr][Mm]64/
+**/bld/
+**/[Bb]in/
+**/[Oo]bj/
+
+# Logs (.NET spezifisch)
+**/[Ll]og/
+**/[Ll]ogs/
+**/*.log
+**/backend/Logging/*.log
+
+# .NET Core & Paketmanager Locks
+**/project.lock.json
+**/project.fragment.lock.json
+**/artifacts/
+**/*.nupkg
+**/*.snupkg
+
+# Tool-Spezifisches (Scaffolding & Testing)
+**/ScaffoldingReadMe.txt
+**/CodeCoverage/
+**/*.binlog
+**/[Tt]est[Rr]esult*/
+**/[Bb]uild[Ll]og.*
+**/*.VisualState.xml
+**/TestResult.xml
+**/nunit-*.xml
+
+# Umgebungsvariablen (Secrets)
+**/.env
+
+# -------------------------------------------------------------------
+# 4. IDES, EDITOREN & SYSTEMDATEN
+# -------------------------------------------------------------------
+# Visual Studio
+**/.vs/
+**/*.us
+**/*.suo
+
+# JetBrains, Eclipse & Andere
+**/.idea/
+**/.project
+**/.classpath
+**/.c9/
+**/*.launch
+**/.settings/
+**/*.sublime-workspace
+**/~$*
+**/*~
+
+# Visual Studio Code Config
+**/_history/*
+**/.vscode/*
+!**/.vscode/settings.json
+!**/.vscode/tasks.json
+!**/.vscode/launch.json
+!**/.vscode/extensions.json
+!**/.vscode/mcp.json
+
+# Betriebssystem-Dateien (Mac / Windows Müll)
+.DS_Store
+Thumbs.db
