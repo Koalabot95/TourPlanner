@@ -1,7 +1,6 @@
 <app-navbar></app-navbar>
 <div class="page-container">
   <div class="split-layout">
-    <!-- Using a form element is best practice for capturing submit events -->
     <form class="card form-section" (ngSubmit)="saveTour()">
       <h2>Create Tour</h2>
 
@@ -29,7 +28,7 @@
       </div>
 
       <div class="form-row">
-        <div class="form-group half-width">
+        <div class="form-group">
           <label>From</label>
           <input
             type="text"
@@ -39,7 +38,8 @@
             placeholder="Start location"
           />
         </div>
-        <div class="form-group half-width">
+        
+        <div class="form-group">
           <label>To</label>
           <input
             type="text"
@@ -61,20 +61,19 @@
       </div>
 
       <div class="form-row">
-        <div class="form-group half-width">
+        <div class="form-group">
           <label>Begin Date</label>
           <input type="date" class="form-control" name="startDate" [(ngModel)]="tour.startDate" />
         </div>
-        <div class="form-group half-width">
+        <div class="form-group">
           <label>End Date</label>
           <input type="date" class="form-control" name="endDate" [(ngModel)]="tour.endDate" />
         </div>
       </div>
 
       <div class="form-row">
-        <div class="form-group half-width">
+        <div class="form-group">
           <label>Distance</label>
-          <!-- Binds to the calculated distance, falls back to text if null -->
           <input
             type="text"
             class="form-control bg-gray"
@@ -82,7 +81,7 @@
             disabled
           />
         </div>
-        <div class="form-group half-width">
+        <div class="form-group">
           <label>Est. Time</label>
           <input
             type="text"
@@ -93,11 +92,11 @@
         </div>
       </div>
 
-      <app-button type="submit" customClass="save-btn"> Save Tour </app-button>
+      <app-button type="submit">Save Tour</app-button>
     </form>
 
     <div class="map-preview">
-      <span>Map Preview for: {{ tour.startLocation }} to {{ tour.endLocation }}</span>
+      <span>Map Preview for: {{ tour.startLocation || '?' }} to {{ tour.endLocation || '?' }}</span>
     </div>
   </div>
 </div>
