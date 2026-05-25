@@ -32,7 +32,9 @@
       />
     </div>
 
-    <app-button variant="primary" type="submit"> Sign In </app-button>
+    <!-- <app-button variant="primary" type="submit"> Sign In </app-button> -->
+     <app-button variant="primary" (click)="redirect()"> Sign In </app-button>
+    
 
     <p class="signup-prompt">Need an account? <a routerLink="/register">Sign up</a></p>
   </form>

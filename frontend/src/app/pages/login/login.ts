@@ -26,6 +26,10 @@ export class Login {
     private authService: AuthService 
   ) {}
 
+  redirect(){
+    this.router.navigate(['/home']);
+  }
+
   login() {
     this.errorMessage = ''; // Fehler bei jedem Klick zurücksetzen
     console.log('Attempting login with:', this.credentials);
