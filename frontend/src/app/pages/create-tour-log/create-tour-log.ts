@@ -31,7 +31,6 @@ export class CreateTourLog {
     const existingLogs = JSON.parse(localStorage.getItem('tourLogs') || '[]');
     existingLogs.push(this.tourLog);
     localStorage.setItem('tourLogs', JSON.stringify(existingLogs));
-
     this.router.navigate(['/home']);
   }
 }

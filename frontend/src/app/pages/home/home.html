@@ -9,9 +9,11 @@
 
       <div class="card-container">
         @for (tour of tours; track tour.tourId) {
-          <app-card [title]="tour.name">
+          <!-- Pass the resolved image URL to the card component -->
+          <app-card [title]="tour.name" [imageUrl]="getImageUrl(tour.imagePath) || ''">
             <p><strong>Route:</strong> {{ tour.startLocation }} ➔ {{ tour.endLocation }}</p>
             <p><strong>Transport:</strong> {{ tour.transportType }}</p>
+
             @if (tour.description) {
               <p class="description">{{ tour.description }}</p>
             }
@@ -23,7 +25,8 @@
         }
       </div>
     </section>
-    <section>
+
+    <section class="logs-section">
       <div class="section-header">
         <h2>Recent Logs</h2>
         <app-button routerLink="/create-tour-log">+ New Log</app-button>
@@ -32,12 +35,20 @@
       <div class="card-container">
         @for (log of tourLogs; track log.logId) {
           <app-card [title]="log.name">
-            <p><strong>Date:</strong> {{ log.dateTime | date: 'mediumDate' }}</p>
-            <p><strong>Comment:</strong> {{ log.comment }}</p>
+            <p><strong>Date:</strong> {{ log.dateTime | date: 'shortDate' }}</p>
+            <p><strong>Stats:</strong> {{ log.totalDistance }} km in {{ log.totalTime }} hrs</p>
+            <p><strong>Difficulty:</strong> {{ log.difficulty }}</p>
+            <p><strong>Rating:</strong> {{ log.rating }} / 5</p>
+
+            @if (log.comment) {
+              <p class="comment">
+                <em>"{{ log.comment }}"</em>
+              </p>
+            }
           </app-card>
         } @empty {
           <app-card>
-            <p>No tour logs available.</p>
+            <p>No logs recorded yet.</p>
           </app-card>
         }
       </div>

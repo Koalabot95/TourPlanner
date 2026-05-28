@@ -11,4 +11,8 @@ import { Component, Input } from '@angular/core';
 export class Card {
   @Input() title: string = '';
   @Input() customClass: string = '';
+
+  // New inputs for image support
+  @Input() imageUrl: string = '';
+  @Input() imageAlt: string = 'Card image';
 }

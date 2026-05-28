@@ -16,6 +16,7 @@ export interface Tour {
   mapSnapshotPath: string;
   popularity: number;
   childfriendliness: number;
+  imagePath?: string;
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }
