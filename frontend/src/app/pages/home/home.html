@@ -1,7 +1,6 @@
 <app-navbar></app-navbar>
 <div class="page-container">
   <div class="split-layout">
-    
     <section class="tours-section">
       <div class="section-header">
         <h2>My Tours</h2>
@@ -10,24 +9,21 @@
 
       <div class="card-container">
         @for (tour of tours; track tour.tourId) {
-          <div class="card">
-            <h3>{{ tour.name }}</h3>
+          <app-card [title]="tour.name">
             <p><strong>Route:</strong> {{ tour.startLocation }} ➔ {{ tour.endLocation }}</p>
             <p><strong>Transport:</strong> {{ tour.transportType }}</p>
-            
             @if (tour.description) {
               <p class="description">{{ tour.description }}</p>
             }
-          </div>
+          </app-card>
         } @empty {
-          <div class="card empty-state">
+          <app-card>
             <p>You haven't created any tours yet.</p>
-          </div>
+          </app-card>
         }
       </div>
     </section>
-
-    <section class="logs-section">
+    <section>
       <div class="section-header">
         <h2>Recent Logs</h2>
         <app-button routerLink="/create-tour-log">+ New Log</app-button>
@@ -35,24 +31,16 @@
 
       <div class="card-container">
         @for (log of tourLogs; track log.logId) {
-          <div class="card">
-            <h3>{{ log.name }}</h3>
-            <p><strong>Date:</strong> {{ log.dateTime | date:'shortDate' }}</p>
-            <p><strong>Stats:</strong> {{ log.totalDistance }} km in {{ log.totalTime }} hrs</p>
-            <p><strong>Difficulty:</strong> {{ log.difficulty }}</p>
-            <p><strong>Rating:</strong> {{ log.rating }} / 5</p>
-            
-            @if (log.comment) {
-              <p class="comment"><em>"{{ log.comment }}"</em></p>
-            }
-          </div>
+          <app-card [title]="log.name">
+            <p><strong>Date:</strong> {{ log.dateTime | date: 'mediumDate' }}</p>
+            <p><strong>Comment:</strong> {{ log.comment }}</p>
+          </app-card>
         } @empty {
-          <div class="card empty-state">
-            <p>No logs recorded yet.</p>
-          </div>
+          <app-card>
+            <p>No tour logs available.</p>
+          </app-card>
         }
       </div>
     </section>
-    
   </div>
 </div>
