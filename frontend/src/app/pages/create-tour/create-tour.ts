@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../../components/navbar/navbar';
 import { Button } from '../../components/button/button';
@@ -14,7 +14,7 @@ import { TransportType } from '../../models/enums.model';
   templateUrl: './create-tour.html',
   styleUrl: './create-tour.scss',
 })
-export class CreateTour {
+export class CreateTour implements OnInit {
   tour: Tour = {
     userId: 'default-user-id',
     tourId: 'tour-' + Date.now(),
@@ -24,20 +24,49 @@ export class CreateTour {
     endLocation: '',
     startDate: '',
     endDate: '',
-    transportType: TransportType.Hike,
+    transportType: '' as TransportType, // <-- Set to empty to force user selection
     distance: 0,
     estimatedTime: 0,
     routeInformation: '',
     mapSnapshotPath: '',
     popularity: 0,
     childfriendliness: 0,
-    imagePath: '', // Will store only the filename
+    imagePath: '',
   };
 
   previewUrl: string | null = null;
+  isEditMode: boolean = false;
+  todayDate: string = '';
   private selectedFile: File | null = null;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+  ) {}
+
+  ngOnInit() {
+    // Generate today's date in YYYY-MM-DD format to prevent past dates
+    const today = new Date();
+    this.todayDate = today.toISOString().split('T')[0];
+
+    const editId = this.route.snapshot.paramMap.get('id');
+    if (editId) {
+      this.isEditMode = true;
+      const tours = JSON.parse(localStorage.getItem('tours') || '[]');
+      const existing = tours.find((t: Tour) => t.tourId === editId);
+      if (existing) {
+        this.tour = existing;
+
+        if (this.tour.imagePath) {
+          const globalImages = JSON.parse(localStorage.getItem('global_images') || '[]');
+          const imgRecord = globalImages.find((img: any) => img.filename === this.tour.imagePath);
+          if (imgRecord) {
+            this.previewUrl = imgRecord.data;
+          }
+        }
+      }
+    }
+  }
 
   onFileSelected(event: any) {
     this.selectedFile = event.target.files[0];
@@ -51,23 +80,16 @@ export class CreateTour {
   }
 
   saveTour() {
-    // 1. Handle Image Storage (Global)
-    let imageFilename = '';
+    let imageFilename = this.tour.imagePath || '';
 
     if (this.selectedFile && this.previewUrl) {
-      // Create a unique filename
       imageFilename = `tour-${Date.now()}-${this.selectedFile.name}`;
-
-      // Get existing global images or initialize empty array
       const globalImages = JSON.parse(localStorage.getItem('global_images') || '[]');
-
-      // Push new image entry: { filename: '...', data: 'base64...' }
       globalImages.push({
         filename: imageFilename,
         data: this.previewUrl,
       });
 
-      // Save back to localStorage
       try {
         localStorage.setItem('global_images', JSON.stringify(globalImages));
       } catch (e) {
@@ -76,12 +98,21 @@ export class CreateTour {
       }
     }
 
-    // 2. Assign only the filename to the tour
+    if (!imageFilename && !this.isEditMode) {
+      alert('An image is required to create a tour.');
+      return;
+    }
+
     this.tour.imagePath = imageFilename;
 
-    // 3. Save Tour to LocalStorage
     const existingTours = JSON.parse(localStorage.getItem('tours') || '[]');
-    existingTours.push(this.tour);
+
+    if (this.isEditMode) {
+      const index = existingTours.findIndex((t: Tour) => t.tourId === this.tour.tourId);
+      if (index !== -1) existingTours[index] = this.tour;
+    } else {
+      existingTours.push(this.tour);
+    }
 
     try {
       localStorage.setItem('tours', JSON.stringify(existingTours));

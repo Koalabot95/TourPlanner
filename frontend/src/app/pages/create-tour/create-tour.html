@@ -1,11 +1,15 @@
 <app-navbar></app-navbar>
 <div class="page-container">
   <div class="split-layout">
-    <form class="card form-section" (ngSubmit)="saveTour()">
-      <h2>Create Tour</h2>
+    <form
+      class="card form-section"
+      #tourForm="ngForm"
+      (ngSubmit)="tourForm.form.valid && saveTour()"
+    >
+      <h2>{{ isEditMode ? 'Modify Tour' : 'Create Tour' }}</h2>
 
       <div class="form-group">
-        <label>Tour Name</label>
+        <label>Tour Name *</label>
         <input
           type="text"
           class="form-control"
@@ -13,7 +17,13 @@
           [(ngModel)]="tour.name"
           placeholder="Enter tour name"
           required
+          minlength="3"
+          #name="ngModel"
+          [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
         />
+        @if (name.invalid && (name.dirty || name.touched)) {
+          <small class="error-text">Tour name must be at least 3 characters long.</small>
+        }
       </div>
 
       <div class="form-group">
@@ -29,58 +39,119 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label>From</label>
+          <label>From *</label>
           <input
             type="text"
             class="form-control"
             name="startLocation"
             [(ngModel)]="tour.startLocation"
             placeholder="Start location"
+            required
+            minlength="2"
+            #startLocation="ngModel"
+            [ngClass]="{
+              'is-invalid': startLocation.invalid && (startLocation.dirty || startLocation.touched),
+            }"
           />
+          @if (startLocation.invalid && (startLocation.dirty || startLocation.touched)) {
+            <small class="error-text">Start location must be at least 2 characters.</small>
+          }
         </div>
 
         <div class="form-group">
-          <label>To</label>
+          <label>To *</label>
           <input
             type="text"
             class="form-control"
             name="endLocation"
             [(ngModel)]="tour.endLocation"
             placeholder="End location"
+            required
+            minlength="2"
+            #endLocation="ngModel"
+            [ngClass]="{
+              'is-invalid': endLocation.invalid && (endLocation.dirty || endLocation.touched),
+            }"
           />
+          @if (endLocation.invalid && (endLocation.dirty || endLocation.touched)) {
+            <small class="error-text">End location must be at least 2 characters.</small>
+          }
         </div>
       </div>
 
       <div class="form-group">
-        <label>Choose Transport Type</label>
-        <select class="form-control" name="transportType" [(ngModel)]="tour.transportType">
+        <label>Choose Transport Type *</label>
+        <select
+          class="form-control"
+          name="transportType"
+          [(ngModel)]="tour.transportType"
+          required
+          #transportType="ngModel"
+          [ngClass]="{
+            'is-invalid': transportType.invalid && (transportType.dirty || transportType.touched),
+          }"
+        >
+          <option value="" disabled selected>Choose the transport type</option>
           <option value="Hike">Hike</option>
           <option value="Bike">Bike</option>
           <option value="Running">Running</option>
-          <option value="Vacation">Vacation</option>
         </select>
+        @if (transportType.invalid && (transportType.dirty || transportType.touched)) {
+          <small class="error-text">Please select a transport type.</small>
+        }
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label>Begin Date</label>
-          <input type="date" class="form-control" name="startDate" [(ngModel)]="tour.startDate" />
+          <label>Begin Date *</label>
+          <input
+            type="date"
+            class="form-control"
+            name="startDate"
+            [(ngModel)]="tour.startDate"
+            required
+            [min]="todayDate"
+            #startDate="ngModel"
+            [ngClass]="{
+              'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched),
+            }"
+          />
+          @if (startDate.invalid && (startDate.dirty || startDate.touched)) {
+            <small class="error-text">Please select a valid future date.</small>
+          }
         </div>
         <div class="form-group">
-          <label>End Date</label>
-          <input type="date" class="form-control" name="endDate" [(ngModel)]="tour.endDate" />
+          <label>End Date *</label>
+          <input
+            type="date"
+            class="form-control"
+            name="endDate"
+            [(ngModel)]="tour.endDate"
+            required
+            [min]="tour.startDate || todayDate"
+            #endDate="ngModel"
+            [ngClass]="{ 'is-invalid': endDate.invalid && (endDate.dirty || endDate.touched) }"
+          />
+          @if (endDate.invalid && (endDate.dirty || endDate.touched)) {
+            <small class="error-text">End date must be on or after the start date.</small>
+          }
         </div>
       </div>
 
       <div class="form-group">
-        <label>Tour Image</label>
+        <label>Tour Image {{ isEditMode ? '' : '*' }}</label>
         <input
           type="file"
           class="form-control"
           name="imageFile"
           accept="image/*"
           (change)="onFileSelected($event)"
+          [required]="!isEditMode && !previewUrl"
+          [ngClass]="{ 'is-invalid': !isEditMode && !previewUrl && tourForm.submitted }"
         />
+        @if (!isEditMode && !previewUrl && tourForm.submitted) {
+          <small class="error-text">Please upload an image.</small>
+        }
 
         @if (previewUrl) {
           <div class="image-preview-small">
@@ -114,7 +185,9 @@
         </div>
       </div>
 
-      <app-button type="submit">Save Tour</app-button>
+      <app-button type="submit" [disabled]="tourForm.invalid || (!isEditMode && !previewUrl)"
+        >Save Tour</app-button
+      >
     </form>
 
     <div class="map-preview">
