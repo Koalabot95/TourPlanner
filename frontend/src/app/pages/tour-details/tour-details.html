@@ -5,8 +5,10 @@
       <h2>{{ tour.name }}</h2>
       <div class="button-group">
         <app-button variant="secondary" routerLink="/home">Back</app-button>
-        <app-button variant="primary" [routerLink]="['/edit-tour', tour.tourId]">Edit</app-button>
-        <app-button variant="danger" (buttonClick)="deleteTour()">Delete</app-button>
+        <app-button variant="primary" [routerLink]="['/edit-tour', tour.tourId]"
+          >Edit Tour</app-button
+        >
+        <app-button variant="danger" (buttonClick)="deleteTour()">Delete Tour</app-button>
       </div>
     </div>
 
@@ -65,6 +67,43 @@
           <h3>Interactive Map Placeholder</h3>
           <p>Showing route from {{ tour.startLocation }} to {{ tour.endLocation }}</p>
         </div>
+      </div>
+    </div>
+
+    <div class="logs-section mt-4">
+      <div class="section-header">
+        <h3>Tour Logs</h3>
+        <app-button [routerLink]="['/create-tour-log']" [queryParams]="{ tourId: tour.tourId }"
+          >+ Add Log</app-button
+        >
+      </div>
+
+      <div class="card-container">
+        @for (log of tourLogs; track log.logId) {
+          <app-card
+            [title]="(log.dateTime | date: 'mediumDate') || ''"
+            [imageUrl]="getImageUrl(log.imagePath) || ''"
+          >
+            <div card-header-actions class="log-actions">
+              <a [routerLink]="['/edit-tour-log', log.logId]" class="action-link">Edit</a>
+              <a (click)="deleteLog(log.logId)" class="action-link danger">Delete</a>
+            </div>
+
+            <p><strong>Stats:</strong> {{ log.totalDistance }} km in {{ log.totalTime }} hrs</p>
+            <p><strong>Difficulty:</strong> {{ log.difficulty }}</p>
+            <p><strong>Rating:</strong> {{ log.rating }} / 5</p>
+
+            @if (log.comment) {
+              <p class="comment">
+                <em>"{{ log.comment }}"</em>
+              </p>
+            }
+          </app-card>
+        } @empty {
+          <div class="empty-state">
+            <p>No logs recorded for this tour yet.</p>
+          </div>
+        }
       </div>
     </div>
   } @else {

@@ -1,66 +1,151 @@
 <app-navbar></app-navbar>
 <div class="page-container">
   <div class="split-layout">
-    <form class="card form-section" (ngSubmit)="saveLog()">
-      <h2>Create Tour Log</h2>
+    <form class="card form-section" #logForm="ngForm" (ngSubmit)="logForm.form.valid && saveLog()">
+      <h2>{{ isEditMode ? 'Modify Tour Log' : 'Create Tour Log' }}</h2>
 
       <div class="form-group">
-        <label>Tour</label>
-        <select class="form-control" name="name" [(ngModel)]="tourLog.name">
-          <option value="Mountain Trail">Mountain Trail</option>
-          <option value="City Tour">City Tour</option>
-          <option value="Lakeside Walk">Lakeside Walk</option>
-          <option value="Forest Hike">Forest Hike</option>
+        <label>Select Tour *</label>
+        <select
+          class="form-control"
+          name="tourId"
+          [(ngModel)]="tourLog.tourId"
+          (change)="updateLogName()"
+          required
+          #tourId="ngModel"
+          [ngClass]="{ 'is-invalid': tourId.invalid && (tourId.dirty || tourId.touched) }"
+        >
+          <option value="" disabled selected>Select a tour</option>
+          @for (t of tours; track t.tourId) {
+            <option [value]="t.tourId">{{ t.name }}</option>
+          }
         </select>
+        @if (tourId.invalid && (tourId.dirty || tourId.touched)) {
+          <small class="error-text">You must link this log to a tour.</small>
+        }
       </div>
 
       <div class="form-group">
-        <label>Date</label>
-        <input type="date" class="form-control" name="dateTime" [(ngModel)]="tourLog.dateTime" />
+        <label>Date *</label>
+        <input
+          type="date"
+          class="form-control"
+          name="dateTime"
+          [(ngModel)]="tourLog.dateTime"
+          required
+          [max]="todayDate"
+          #dateTime="ngModel"
+          [ngClass]="{ 'is-invalid': dateTime.invalid && (dateTime.dirty || dateTime.touched) }"
+        />
+        @if (dateTime.invalid && (dateTime.dirty || dateTime.touched)) {
+          <small class="error-text">Please select a valid past or current date.</small>
+        }
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label>Distance (km)</label>
+          <label>Distance (km) *</label>
           <input
             type="number"
             class="form-control"
             name="totalDistance"
             [(ngModel)]="tourLog.totalDistance"
             placeholder="Enter distance"
+            required
+            min="0.1"
+            #dist="ngModel"
+            [ngClass]="{ 'is-invalid': dist.invalid && (dist.dirty || dist.touched) }"
           />
+          @if (dist.invalid && (dist.dirty || dist.touched)) {
+            <small class="error-text">Distance must be greater than 0.</small>
+          }
         </div>
         <div class="form-group">
-          <label>Time (hrs)</label>
+          <label>Time (hrs) *</label>
           <input
             type="number"
             class="form-control"
             name="totalTime"
             [(ngModel)]="tourLog.totalTime"
             placeholder="Enter time"
+            required
+            min="0.1"
+            #time="ngModel"
+            [ngClass]="{ 'is-invalid': time.invalid && (time.dirty || time.touched) }"
           />
+          @if (time.invalid && (time.dirty || time.touched)) {
+            <small class="error-text">Time must be greater than 0.</small>
+          }
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label>Difficulty</label>
-          <select class="form-control" name="difficulty" [(ngModel)]="tourLog.difficulty">
+          <label>Difficulty *</label>
+          <select
+            class="form-control"
+            name="difficulty"
+            [(ngModel)]="tourLog.difficulty"
+            required
+            #diff="ngModel"
+            [ngClass]="{ 'is-invalid': diff.invalid && (diff.dirty || diff.touched) }"
+          >
+            <option value="" disabled selected>Choose difficulty</option>
             <option value="Easy">Easy</option>
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
           </select>
+          @if (diff.invalid && (diff.dirty || diff.touched)) {
+            <small class="error-text">Please select a difficulty.</small>
+          }
         </div>
         <div class="form-group">
-          <label>Rating</label>
-          <select class="form-control" name="rating" [(ngModel)]="tourLog.rating">
+          <label>Rating *</label>
+          <select
+            class="form-control"
+            name="rating"
+            [(ngModel)]="tourLog.rating"
+            required
+            #rating="ngModel"
+            [ngClass]="{ 'is-invalid': rating.invalid && (rating.dirty || rating.touched) }"
+          >
+            <option value="0" disabled selected>Rate your tour</option>
             <option value="1">1 - Poor</option>
             <option value="2">2 - Fair</option>
             <option value="3">3 - Good</option>
             <option value="4">4 - Very Good</option>
             <option value="5">5 - Excellent</option>
           </select>
+          @if ((rating.value == 0 || rating.invalid) && (rating.dirty || rating.touched)) {
+            <small class="error-text">Please provide a rating.</small>
+          }
         </div>
+      </div>
+
+      <div class="form-group">
+        <label>Log Image {{ isEditMode ? '' : '*' }}</label>
+        <input
+          type="file"
+          class="form-control"
+          name="imageFile"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          [required]="!isEditMode && !previewUrl"
+          [ngClass]="{ 'is-invalid': !isEditMode && !previewUrl && logForm.submitted }"
+        />
+        @if (!isEditMode && !previewUrl && logForm.submitted) {
+          <small class="error-text">Please upload an image for your log.</small>
+        }
+
+        @if (previewUrl) {
+          <div class="image-preview-small">
+            <img
+              [src]="previewUrl"
+              alt="Preview"
+              style="max-width: 100%; max-height: 200px; margin-top: 10px; border-radius: 4px"
+            />
+          </div>
+        }
       </div>
 
       <div class="form-group">
@@ -74,11 +159,15 @@
         ></textarea>
       </div>
 
-      <app-button type="submit">Save Log</app-button>
+      <app-button
+        type="submit"
+        [disabled]="logForm.invalid || (!isEditMode && !previewUrl) || tourLog.rating == 0"
+        >Save Log</app-button
+      >
     </form>
 
     <div class="image-preview">
-      <span>Image Preview for: {{ tourLog.name || '?' }}</span>
+      <span>Summary Preview for: {{ tourLog.name || '?' }}</span>
     </div>
   </div>
 </div>

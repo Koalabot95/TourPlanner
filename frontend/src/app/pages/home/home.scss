@@ -44,8 +44,29 @@
   padding-top: 0.5rem;
 }
 
+/* NEW: Styles for the Edit/Delete links on logs */
+.log-actions {
+  display: flex;
+  gap: 0.75rem;
+
+  .action-link {
+    font-size: 0.875rem;
+    color: #2563eb;
+    cursor: pointer;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &.danger {
+      color: #dc2626;
+    }
+  }
+}
+
 .empty-state {
   text-align: center;
   color: #9ca3af;
-  grid-column: 1 / -1; /* Span full width */
+  grid-column: 1 / -1;
 }

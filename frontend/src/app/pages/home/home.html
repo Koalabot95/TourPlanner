@@ -39,7 +39,12 @@
 
       <div class="card-container">
         @for (log of tourLogs; track log.logId) {
-          <app-card [title]="log.name">
+          <app-card [title]="log.name" [imageUrl]="getImageUrl(log.imagePath) || ''">
+            <div card-header-actions class="log-actions">
+              <a [routerLink]="['/edit-tour-log', log.logId]" class="action-link">Edit</a>
+              <a (click)="deleteLog(log.logId)" class="action-link danger">Delete</a>
+            </div>
+
             <p><strong>Date:</strong> {{ log.dateTime | date: 'shortDate' }}</p>
             <p><strong>Stats:</strong> {{ log.totalDistance }} km in {{ log.totalTime }} hrs</p>
             <p><strong>Difficulty:</strong> {{ log.difficulty }}</p>

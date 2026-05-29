@@ -1,5 +1,4 @@
 import { Difficulty } from './enums.model';
-import { Image } from './image.model';
 
 export interface TourLog {
   logId: string;
@@ -12,5 +11,5 @@ export interface TourLog {
   totalTime: number;
   rating: number;
   createdAt?: Date | string;
-  imageUrl?: Image;
+  imagePath?: string; // Updated to string to match Tour implementation
 }

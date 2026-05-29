@@ -4,7 +4,6 @@
   padding: 2rem;
 }
 
-// Mobile-first responsive layout
 .split-layout {
   display: grid;
   grid-template-columns: 1fr;
@@ -27,9 +26,27 @@
   gap: 1rem;
 }
 
+/* Validation Styling */
+.form-control.is-invalid {
+  border: 1px solid #ef4444;
+  background-color: #fef2f2;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+  }
+}
+
+.error-text {
+  color: #ef4444;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
 .image-preview {
   display: grid;
-  place-items: center; // Perfectly centers the text
+  place-items: center;
   min-height: 400px;
   background: #e5e7eb;
   border: 2px dashed #9ca3af;

@@ -14,5 +14,6 @@ export const routes: Routes = [
   { path: 'edit-tour/:id', component: CreateTour },
   { path: 'tour-details/:id', component: TourDetails },
   { path: 'create-tour-log', component: CreateTourLog },
+  { path: 'edit-tour-log/:id', component: CreateTourLog },
   { path: 'profile', component: Profile },
 ];
