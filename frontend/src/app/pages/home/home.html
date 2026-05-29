@@ -18,7 +18,6 @@
 
             <p><strong>Route:</strong> {{ tour.startLocation }} ➔ {{ tour.endLocation }}</p>
             <p><strong>Transport:</strong> {{ tour.transportType }}</p>
-
             @if (tour.description) {
               <p class="description">{{ tour.description }}</p>
             }
@@ -39,23 +38,12 @@
 
       <div class="card-container">
         @for (log of tourLogs; track log.logId) {
-          <app-card [title]="log.name" [imageUrl]="getImageUrl(log.imagePath) || ''">
-            <div card-header-actions class="log-actions">
-              <a [routerLink]="['/edit-tour-log', log.logId]" class="action-link">Edit</a>
-              <a (click)="deleteLog(log.logId)" class="action-link danger">Delete</a>
-            </div>
-
-            <p><strong>Date:</strong> {{ log.dateTime | date: 'shortDate' }}</p>
-            <p><strong>Stats:</strong> {{ log.totalDistance }} km in {{ log.totalTime }} hrs</p>
-            <p><strong>Difficulty:</strong> {{ log.difficulty }}</p>
-            <p><strong>Rating:</strong> {{ log.rating }} / 5</p>
-
-            @if (log.comment) {
-              <p class="comment">
-                <em>"{{ log.comment }}"</em>
-              </p>
-            }
-          </app-card>
+          <app-log-card
+            [log]="log"
+            [imageUrl]="getImageUrl(log.imagePath) || ''"
+            (delete)="deleteLog($event)"
+          >
+          </app-log-card>
         } @empty {
           <app-card>
             <p>No logs recorded yet.</p>

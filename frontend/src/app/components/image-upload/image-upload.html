@@ -1,0 +1,21 @@
+<div class="form-group">
+  <label>{{ label }} {{ isEditMode ? '' : '*' }}</label>
+  <input
+    type="file"
+    class="form-control"
+    accept="image/*"
+    (change)="onFileChange($event)"
+    [required]="!isEditMode && !previewUrl"
+    [ngClass]="{ 'is-invalid': !isEditMode && !previewUrl && submitted }"
+  />
+
+  @if (!isEditMode && !previewUrl && submitted) {
+    <small class="error-text">Please upload an image.</small>
+  }
+
+  @if (previewUrl) {
+    <div class="image-preview-small">
+      <img [src]="previewUrl" alt="Preview" />
+    </div>
+  }
+</div>

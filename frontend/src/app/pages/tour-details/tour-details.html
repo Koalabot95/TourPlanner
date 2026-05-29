@@ -19,27 +19,22 @@
             <label>Description</label>
             <p>{{ tour.description || 'No description provided.' }}</p>
           </div>
-
           <div class="detail-item">
             <label>Route</label>
             <p>{{ tour.startLocation }} ➔ {{ tour.endLocation }}</p>
           </div>
-
           <div class="detail-item">
             <label>Transport Type</label>
             <p>{{ tour.transportType }}</p>
           </div>
-
           <div class="detail-item">
             <label>Dates</label>
             <p>{{ tour.startDate | date }} to {{ tour.endDate | date }}</p>
           </div>
-
           <div class="detail-item">
             <label>Distance</label>
             <p>{{ tour.distance ? tour.distance + ' km' : 'TBD' }}</p>
           </div>
-
           <div class="detail-item">
             <label>Estimated Time</label>
             <p>{{ tour.estimatedTime ? tour.estimatedTime + ' hrs' : 'TBD' }}</p>
@@ -80,29 +75,14 @@
 
       <div class="card-container">
         @for (log of tourLogs; track log.logId) {
-          <app-card
-            [title]="(log.dateTime | date: 'mediumDate') || ''"
+          <app-log-card
+            [log]="log"
             [imageUrl]="getImageUrl(log.imagePath) || ''"
+            (delete)="deleteLog($event)"
           >
-            <div card-header-actions class="log-actions">
-              <a [routerLink]="['/edit-tour-log', log.logId]" class="action-link">Edit</a>
-              <a (click)="deleteLog(log.logId)" class="action-link danger">Delete</a>
-            </div>
-
-            <p><strong>Stats:</strong> {{ log.totalDistance }} km in {{ log.totalTime }} hrs</p>
-            <p><strong>Difficulty:</strong> {{ log.difficulty }}</p>
-            <p><strong>Rating:</strong> {{ log.rating }} / 5</p>
-
-            @if (log.comment) {
-              <p class="comment">
-                <em>"{{ log.comment }}"</em>
-              </p>
-            }
-          </app-card>
+          </app-log-card>
         } @empty {
-          <div class="empty-state">
-            <p>No logs recorded for this tour yet.</p>
-          </div>
+          <div class="empty-state"><p>No logs recorded for this tour yet.</p></div>
         }
       </div>
     </div>

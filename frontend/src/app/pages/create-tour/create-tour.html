@@ -8,8 +8,11 @@
     >
       <h2>{{ isEditMode ? 'Modify Tour' : 'Create Tour' }}</h2>
 
-      <div class="form-group">
-        <label>Tour Name *</label>
+      <app-form-field
+        label="Tour Name *"
+        [showError]="name.invalid && (name.dirty || name.touched)"
+        errorMessage="Tour name must be at least 3 characters long."
+      >
         <input
           type="text"
           class="form-control"
@@ -21,13 +24,9 @@
           #name="ngModel"
           [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
         />
-        @if (name.invalid && (name.dirty || name.touched)) {
-          <small class="error-text">Tour name must be at least 3 characters long.</small>
-        }
-      </div>
+      </app-form-field>
 
-      <div class="form-group">
-        <label>Description</label>
+      <app-form-field label="Description">
         <textarea
           class="form-control"
           rows="3"
@@ -35,11 +34,14 @@
           [(ngModel)]="tour.description"
           placeholder="Enter description"
         ></textarea>
-      </div>
+      </app-form-field>
 
       <div class="form-row">
-        <div class="form-group">
-          <label>From *</label>
+        <app-form-field
+          label="From *"
+          [showError]="startLoc.invalid && (startLoc.dirty || startLoc.touched)"
+          errorMessage="Min 2 characters."
+        >
           <input
             type="text"
             class="form-control"
@@ -48,18 +50,16 @@
             placeholder="Start location"
             required
             minlength="2"
-            #startLocation="ngModel"
-            [ngClass]="{
-              'is-invalid': startLocation.invalid && (startLocation.dirty || startLocation.touched),
-            }"
+            #startLoc="ngModel"
+            [ngClass]="{ 'is-invalid': startLoc.invalid && (startLoc.dirty || startLoc.touched) }"
           />
-          @if (startLocation.invalid && (startLocation.dirty || startLocation.touched)) {
-            <small class="error-text">Start location must be at least 2 characters.</small>
-          }
-        </div>
+        </app-form-field>
 
-        <div class="form-group">
-          <label>To *</label>
+        <app-form-field
+          label="To *"
+          [showError]="endLoc.invalid && (endLoc.dirty || endLoc.touched)"
+          errorMessage="Min 2 characters."
+        >
           <input
             type="text"
             class="form-control"
@@ -68,42 +68,39 @@
             placeholder="End location"
             required
             minlength="2"
-            #endLocation="ngModel"
-            [ngClass]="{
-              'is-invalid': endLocation.invalid && (endLocation.dirty || endLocation.touched),
-            }"
+            #endLoc="ngModel"
+            [ngClass]="{ 'is-invalid': endLoc.invalid && (endLoc.dirty || endLoc.touched) }"
           />
-          @if (endLocation.invalid && (endLocation.dirty || endLocation.touched)) {
-            <small class="error-text">End location must be at least 2 characters.</small>
-          }
-        </div>
+        </app-form-field>
       </div>
 
-      <div class="form-group">
-        <label>Choose Transport Type *</label>
+      <app-form-field
+        label="Choose Transport Type *"
+        [showError]="transport.invalid && (transport.dirty || transport.touched)"
+        errorMessage="Please select a transport type."
+      >
         <select
           class="form-control"
           name="transportType"
           [(ngModel)]="tour.transportType"
           required
-          #transportType="ngModel"
-          [ngClass]="{
-            'is-invalid': transportType.invalid && (transportType.dirty || transportType.touched),
-          }"
+          #transport="ngModel"
+          [ngClass]="{ 'is-invalid': transport.invalid && (transport.dirty || transport.touched) }"
         >
           <option value="" disabled selected>Choose the transport type</option>
           <option value="Hike">Hike</option>
           <option value="Bike">Bike</option>
           <option value="Running">Running</option>
+          <option value="Vacation">Vacation</option>
         </select>
-        @if (transportType.invalid && (transportType.dirty || transportType.touched)) {
-          <small class="error-text">Please select a transport type.</small>
-        }
-      </div>
+      </app-form-field>
 
       <div class="form-row">
-        <div class="form-group">
-          <label>Begin Date *</label>
+        <app-form-field
+          label="Begin Date *"
+          [showError]="startDate.invalid && (startDate.dirty || startDate.touched)"
+          errorMessage="Invalid past date."
+        >
           <input
             type="date"
             class="form-control"
@@ -116,12 +113,13 @@
               'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched),
             }"
           />
-          @if (startDate.invalid && (startDate.dirty || startDate.touched)) {
-            <small class="error-text">Please select a valid future date.</small>
-          }
-        </div>
-        <div class="form-group">
-          <label>End Date *</label>
+        </app-form-field>
+
+        <app-form-field
+          label="End Date *"
+          [showError]="endDate.invalid && (endDate.dirty || endDate.touched)"
+          errorMessage="Must be after start date."
+        >
           <input
             type="date"
             class="form-control"
@@ -132,57 +130,35 @@
             #endDate="ngModel"
             [ngClass]="{ 'is-invalid': endDate.invalid && (endDate.dirty || endDate.touched) }"
           />
-          @if (endDate.invalid && (endDate.dirty || endDate.touched)) {
-            <small class="error-text">End date must be on or after the start date.</small>
-          }
-        </div>
+        </app-form-field>
       </div>
 
-      <div class="form-group">
-        <label>Tour Image {{ isEditMode ? '' : '*' }}</label>
-        <input
-          type="file"
-          class="form-control"
-          name="imageFile"
-          accept="image/*"
-          (change)="onFileSelected($event)"
-          [required]="!isEditMode && !previewUrl"
-          [ngClass]="{ 'is-invalid': !isEditMode && !previewUrl && tourForm.submitted }"
-        />
-        @if (!isEditMode && !previewUrl && tourForm.submitted) {
-          <small class="error-text">Please upload an image.</small>
-        }
-
-        @if (previewUrl) {
-          <div class="image-preview-small">
-            <img
-              [src]="previewUrl"
-              alt="Preview"
-              style="max-width: 100%; max-height: 200px; margin-top: 10px; border-radius: 4px"
-            />
-          </div>
-        }
-      </div>
+      <app-image-upload
+        label="Tour Image"
+        [isEditMode]="isEditMode"
+        [previewUrl]="previewUrl"
+        [submitted]="tourForm.submitted"
+        (fileSelected)="onImageSelected($event)"
+      >
+      </app-image-upload>
 
       <div class="form-row">
-        <div class="form-group">
-          <label>Distance</label>
+        <app-form-field label="Distance">
           <input
             type="text"
             class="form-control bg-gray"
             [value]="tour.distance ? tour.distance + ' km' : 'Auto-calculated'"
             disabled
           />
-        </div>
-        <div class="form-group">
-          <label>Est. Time</label>
+        </app-form-field>
+        <app-form-field label="Est. Time">
           <input
             type="text"
             class="form-control bg-gray"
             [value]="tour.estimatedTime ? tour.estimatedTime + ' hrs' : 'Auto-calculated'"
             disabled
           />
-        </div>
+        </app-form-field>
       </div>
 
       <app-button type="submit" [disabled]="tourForm.invalid || (!isEditMode && !previewUrl)"

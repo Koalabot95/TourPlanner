@@ -4,8 +4,11 @@
     <form class="card form-section" #logForm="ngForm" (ngSubmit)="logForm.form.valid && saveLog()">
       <h2>{{ isEditMode ? 'Modify Tour Log' : 'Create Tour Log' }}</h2>
 
-      <div class="form-group">
-        <label>Select Tour *</label>
+      <app-form-field
+        label="Select Tour *"
+        [showError]="tourId.invalid && (tourId.dirty || tourId.touched)"
+        errorMessage="Required."
+      >
         <select
           class="form-control"
           name="tourId"
@@ -20,13 +23,13 @@
             <option [value]="t.tourId">{{ t.name }}</option>
           }
         </select>
-        @if (tourId.invalid && (tourId.dirty || tourId.touched)) {
-          <small class="error-text">You must link this log to a tour.</small>
-        }
-      </div>
+      </app-form-field>
 
-      <div class="form-group">
-        <label>Date *</label>
+      <app-form-field
+        label="Date *"
+        [showError]="dateTime.invalid && (dateTime.dirty || dateTime.touched)"
+        errorMessage="Must be a valid past or current date."
+      >
         <input
           type="date"
           class="form-control"
@@ -37,51 +40,52 @@
           #dateTime="ngModel"
           [ngClass]="{ 'is-invalid': dateTime.invalid && (dateTime.dirty || dateTime.touched) }"
         />
-        @if (dateTime.invalid && (dateTime.dirty || dateTime.touched)) {
-          <small class="error-text">Please select a valid past or current date.</small>
-        }
-      </div>
+      </app-form-field>
 
       <div class="form-row">
-        <div class="form-group">
-          <label>Distance (km) *</label>
+        <app-form-field
+          label="Distance (km) *"
+          [showError]="dist.invalid && (dist.dirty || dist.touched)"
+          errorMessage="Distance must be > 0."
+        >
           <input
             type="number"
             class="form-control"
             name="totalDistance"
             [(ngModel)]="tourLog.totalDistance"
-            placeholder="Enter distance"
+            placeholder="Distance"
             required
             min="0.1"
             #dist="ngModel"
             [ngClass]="{ 'is-invalid': dist.invalid && (dist.dirty || dist.touched) }"
           />
-          @if (dist.invalid && (dist.dirty || dist.touched)) {
-            <small class="error-text">Distance must be greater than 0.</small>
-          }
-        </div>
-        <div class="form-group">
-          <label>Time (hrs) *</label>
+        </app-form-field>
+
+        <app-form-field
+          label="Time (hrs) *"
+          [showError]="time.invalid && (time.dirty || time.touched)"
+          errorMessage="Time must be > 0."
+        >
           <input
             type="number"
             class="form-control"
             name="totalTime"
             [(ngModel)]="tourLog.totalTime"
-            placeholder="Enter time"
+            placeholder="Time"
             required
             min="0.1"
             #time="ngModel"
             [ngClass]="{ 'is-invalid': time.invalid && (time.dirty || time.touched) }"
           />
-          @if (time.invalid && (time.dirty || time.touched)) {
-            <small class="error-text">Time must be greater than 0.</small>
-          }
-        </div>
+        </app-form-field>
       </div>
 
       <div class="form-row">
-        <div class="form-group">
-          <label>Difficulty *</label>
+        <app-form-field
+          label="Difficulty *"
+          [showError]="diff.invalid && (diff.dirty || diff.touched)"
+          errorMessage="Required."
+        >
           <select
             class="form-control"
             name="difficulty"
@@ -95,12 +99,13 @@
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
           </select>
-          @if (diff.invalid && (diff.dirty || diff.touched)) {
-            <small class="error-text">Please select a difficulty.</small>
-          }
-        </div>
-        <div class="form-group">
-          <label>Rating *</label>
+        </app-form-field>
+
+        <app-form-field
+          label="Rating *"
+          [showError]="(rating.value == 0 || rating.invalid) && (rating.dirty || rating.touched)"
+          errorMessage="Required."
+        >
           <select
             class="form-control"
             name="rating"
@@ -116,48 +121,27 @@
             <option value="4">4 - Very Good</option>
             <option value="5">5 - Excellent</option>
           </select>
-          @if ((rating.value == 0 || rating.invalid) && (rating.dirty || rating.touched)) {
-            <small class="error-text">Please provide a rating.</small>
-          }
-        </div>
+        </app-form-field>
       </div>
 
-      <div class="form-group">
-        <label>Log Image {{ isEditMode ? '' : '*' }}</label>
-        <input
-          type="file"
-          class="form-control"
-          name="imageFile"
-          accept="image/*"
-          (change)="onFileSelected($event)"
-          [required]="!isEditMode && !previewUrl"
-          [ngClass]="{ 'is-invalid': !isEditMode && !previewUrl && logForm.submitted }"
-        />
-        @if (!isEditMode && !previewUrl && logForm.submitted) {
-          <small class="error-text">Please upload an image for your log.</small>
-        }
+      <app-image-upload
+        label="Log Image"
+        [isEditMode]="isEditMode"
+        [previewUrl]="previewUrl"
+        [submitted]="logForm.submitted"
+        (fileSelected)="onImageSelected($event)"
+      >
+      </app-image-upload>
 
-        @if (previewUrl) {
-          <div class="image-preview-small">
-            <img
-              [src]="previewUrl"
-              alt="Preview"
-              style="max-width: 100%; max-height: 200px; margin-top: 10px; border-radius: 4px"
-            />
-          </div>
-        }
-      </div>
-
-      <div class="form-group">
-        <label>Notes</label>
+      <app-form-field label="Notes">
         <textarea
           class="form-control"
           rows="3"
           name="comment"
           [(ngModel)]="tourLog.comment"
-          placeholder="Enter any notes about the tour"
+          placeholder="Enter notes"
         ></textarea>
-      </div>
+      </app-form-field>
 
       <app-button
         type="submit"
