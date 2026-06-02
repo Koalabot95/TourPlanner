@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../../components/navbar/navbar';
 import { Button } from '../../components/button/button';
-import { Card } from '../../components/card/card';
+import { TourCard } from '../../components/tour-card/tour-card';
 import { LogCard } from '../../components/log-card/log-card';
 import { Tour } from '../../models/tour.model';
 import { TourLog } from '../../models/tour-log.model';
@@ -11,12 +11,11 @@ import { TourLog } from '../../models/tour-log.model';
 @Component({
   selector: 'app-tour-details',
   standalone: true,
-  imports: [CommonModule, Navbar, Button, Card, RouterLink, LogCard],
+  imports: [CommonModule, Navbar, Button, TourCard, RouterLink, LogCard],
   templateUrl: './tour-details.html',
   styleUrl: './tour-details.scss',
 })
 export class TourDetails implements OnInit {
-  // ... Keep everything identical to the previous implementation ...
   tour: Tour | null = null;
   imageUrl: string | null = null;
   tourLogs: TourLog[] = [];

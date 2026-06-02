@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Navbar } from '../../components/navbar/navbar';
 import { Button } from '../../components/button/button';
-import { Card } from '../../components/card/card';
+import { TourCard } from '../../components/tour-card/tour-card';
 import { LogCard } from '../../components/log-card/log-card';
 import { Tour } from '../../models/tour.model';
 import { TourLog } from '../../models/tour-log.model';
@@ -11,7 +11,7 @@ import { TourLog } from '../../models/tour-log.model';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, Navbar, RouterLink, Button, Card, LogCard],
+  imports: [CommonModule, Navbar, RouterLink, Button, TourCard, LogCard],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

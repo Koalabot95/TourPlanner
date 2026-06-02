@@ -1,4 +1,4 @@
-<app-card [title]="log.name" [imageUrl]="imageUrl">
+<app-tour-card [title]="log.name" [imageUrl]="imageUrl">
   <div card-header-actions class="log-actions">
     <a [routerLink]="['/edit-tour-log', log.logId]" class="action-link">Edit</a>
     <a (click)="delete.emit(log.logId)" class="action-link danger">Delete</a>
@@ -14,4 +14,4 @@
       <em>"{{ log.comment }}"</em>
     </p>
   }
-</app-card>
+</app-tour-card>
