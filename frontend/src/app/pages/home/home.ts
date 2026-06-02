@@ -4,14 +4,14 @@ import { RouterLink } from '@angular/router';
 import { Navbar } from '../../components/navbar/navbar';
 import { Button } from '../../components/button/button';
 import { TourCard } from '../../components/tour-card/tour-card';
-import { LogCard } from '../../components/log-card/log-card';
+import { TourLogCard } from '../../components/tour-log-card/tour-log-card';
 import { Tour } from '../../models/tour.model';
 import { TourLog } from '../../models/tour-log.model';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, Navbar, RouterLink, Button, TourCard, LogCard],
+  imports: [CommonModule, Navbar, RouterLink, Button, TourCard, TourLogCard],
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })

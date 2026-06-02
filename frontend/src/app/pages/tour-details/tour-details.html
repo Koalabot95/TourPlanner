@@ -75,12 +75,12 @@
 
       <div class="card-container">
         @for (log of tourLogs; track log.logId) {
-          <app-log-card
+          <app-tour-log-card 
             [log]="log"
             [imageUrl]="getImageUrl(log.imagePath) || ''"
             (delete)="deleteLog($event)"
           >
-          </app-log-card>
+          </app-tour-log-card>
         } @empty {
           <div class="empty-state"><p>No logs recorded for this tour yet.</p></div>
         }
