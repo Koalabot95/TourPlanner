@@ -94,44 +94,6 @@
         </select>
       </app-form-field>
 
-      <div class="form-row">
-        <app-form-field
-          label="Begin Date *"
-          [showError]="startDate.invalid && (startDate.dirty || startDate.touched)"
-          errorMessage="Invalid past date."
-        >
-          <input
-            type="date"
-            class="form-control"
-            name="startDate"
-            [(ngModel)]="tour.startDate"
-            required
-            [min]="todayDate"
-            #startDate="ngModel"
-            [ngClass]="{
-              'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched),
-            }"
-          />
-        </app-form-field>
-
-        <app-form-field
-          label="End Date *"
-          [showError]="endDate.invalid && (endDate.dirty || endDate.touched)"
-          errorMessage="Must be after start date."
-        >
-          <input
-            type="date"
-            class="form-control"
-            name="endDate"
-            [(ngModel)]="tour.endDate"
-            required
-            [min]="tour.startDate || todayDate"
-            #endDate="ngModel"
-            [ngClass]="{ 'is-invalid': endDate.invalid && (endDate.dirty || endDate.touched) }"
-          />
-        </app-form-field>
-      </div>
-
       <app-image-upload
         label="Tour Image"
         [isEditMode]="isEditMode"

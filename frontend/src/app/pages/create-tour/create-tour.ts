@@ -24,8 +24,6 @@ export class CreateTour implements OnInit {
     description: '',
     startLocation: '',
     endLocation: '',
-    startDate: '',
-    endDate: '',
     transportType: '' as TransportType,
     distance: 0,
     estimatedTime: 0,

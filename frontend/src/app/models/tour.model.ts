@@ -7,8 +7,6 @@ export interface Tour {
   description: string;
   startLocation: string;
   endLocation: string;
-  startDate: Date | string;
-  endDate: Date | string;
   transportType: TransportType;
   distance: number;
   estimatedTime: number;
