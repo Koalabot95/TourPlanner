@@ -46,46 +46,81 @@ export class CreateTour implements OnInit {
 
   ngOnInit() {
     this.todayDate = new Date().toISOString().split('T')[0];
-    const editId = this.route.snapshot.paramMap.get('id');
-
-    if (editId) {
-      this.isEditMode = true;
-      const tours = JSON.parse(localStorage.getItem('tours') || '[]');
-      const existing = tours.find((t: Tour) => t.tourId === editId);
-      if (existing) {
-        this.tour = existing;
-        if (this.tour.imagePath) {
-          const globalImages = JSON.parse(localStorage.getItem('global_images') || '[]');
-          const imgRecord = globalImages.find((img: any) => img.filename === this.tour.imagePath);
-          if (imgRecord) this.previewUrl = imgRecord.data;
-        }
-      }
-    }
+    this.checkAndLoadEditMode();
   }
 
+  // Updates the selected file and preview when the user uploads an image
   onImageSelected(event: { file: File; preview: string }) {
     this.selectedFile = event.file;
     this.previewUrl = event.preview;
   }
 
   saveTour() {
+    const isImageSaved = this.processAndSaveImage();
+
+    // Abort saving if image processing failed or is missing on creation
+    if (!isImageSaved) return;
+
+    this.saveTourDataToStorage();
+    this.router.navigate(['/home']);
+  }
+
+  // Checks the URL for an ID and loads existing data if found
+  private checkAndLoadEditMode() {
+    const editId = this.route.snapshot.paramMap.get('id');
+    if (!editId) return; // Exit early if creating a new tour
+
+    this.isEditMode = true;
+    const tours = JSON.parse(localStorage.getItem('tours') || '[]');
+    const existingTour = tours.find((t: Tour) => t.tourId === editId);
+
+    if (existingTour) {
+      this.tour = existingTour;
+      this.loadExistingImagePreview(this.tour.imagePath ?? '');
+    }
+  }
+
+  // Fetches the image data from local storage if an image path exists
+  private loadExistingImagePreview(imagePath: string) {
+    if (!imagePath) return;
+
+    const globalImages = JSON.parse(localStorage.getItem('global_images') || '[]');
+    const imgRecord = globalImages.find((img: any) => img.filename === imagePath);
+
+    if (imgRecord) {
+      this.previewUrl = imgRecord.data;
+    }
+  }
+
+  // Handles naming, saving, and storing the image file. Returns true if successful/valid.
+  private processAndSaveImage(): boolean {
     let imageFilename = this.tour.imagePath || '';
 
+    // If the user selected a new file, process it
     if (this.selectedFile && this.previewUrl) {
       imageFilename = `tour-${Date.now()}-${this.selectedFile.name}`;
       const globalImages = JSON.parse(localStorage.getItem('global_images') || '[]');
       globalImages.push({ filename: imageFilename, data: this.previewUrl });
+
       try {
         localStorage.setItem('global_images', JSON.stringify(globalImages));
       } catch (e) {
         alert('Storage full! Could not save image.');
-        return;
+        return false; // Stop the save process
       }
     }
 
-    if (!imageFilename && !this.isEditMode) return;
+    // Require an image if we are creating a brand new tour
+    if (!imageFilename && !this.isEditMode) {
+      return false;
+    }
 
     this.tour.imagePath = imageFilename;
+    return true; // Image processed successfully (or wasn't required to change)
+  }
+
+  // Pushes the finalized tour object into the local storage array
+  private saveTourDataToStorage() {
     const existingTours = JSON.parse(localStorage.getItem('tours') || '[]');
 
     if (this.isEditMode) {
@@ -96,6 +131,5 @@ export class CreateTour implements OnInit {
     }
 
     localStorage.setItem('tours', JSON.stringify(existingTours));
-    this.router.navigate(['/home']);
   }
 }
