@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using backend.Models; // für TransportMode
+using backend.Interfaces;
 using log4net;
 using Microsoft.Extensions.Configuration;
 
