@@ -1,0 +1,157 @@
+<app-navbar></app-navbar>
+<div class="page-container">
+  <div class="split-layout">
+    <form class="card form-section" #logForm="ngForm" (ngSubmit)="logForm.form.valid && saveLog()">
+      <h2>{{ isEditMode ? 'Modify Tour Log' : 'Create Tour Log' }}</h2>
+
+      <app-form-field
+        label="Select Tour *"
+        [showError]="tourId.invalid && (tourId.dirty || tourId.touched)"
+        errorMessage="Required."
+      >
+        <select
+          class="form-control"
+          name="tourId"
+          [(ngModel)]="tourLog.tourId"
+          (change)="updateLogName()"
+          required
+          #tourId="ngModel"
+          [ngClass]="{ 'is-invalid': tourId.invalid && (tourId.dirty || tourId.touched) }"
+        >
+          <option value="" disabled selected>Select a tour</option>
+          @for (t of tours; track t.tourId) {
+            <option [value]="t.tourId">{{ t.name }}</option>
+          }
+        </select>
+      </app-form-field>
+
+      <app-form-field
+        label="Date *"
+        [showError]="dateTime.invalid && (dateTime.dirty || dateTime.touched)"
+        errorMessage="Must be a valid past or current date."
+      >
+        <input
+          type="date"
+          class="form-control"
+          name="dateTime"
+          [(ngModel)]="tourLog.dateTime"
+          required
+          [max]="todayDate"
+          #dateTime="ngModel"
+          [ngClass]="{ 'is-invalid': dateTime.invalid && (dateTime.dirty || dateTime.touched) }"
+        />
+      </app-form-field>
+
+      <div class="form-row">
+        <app-form-field
+          label="Distance (km) *"
+          [showError]="dist.invalid && (dist.dirty || dist.touched)"
+          errorMessage="Distance must be > 0."
+        >
+          <input
+            type="number"
+            class="form-control"
+            name="totalDistance"
+            [(ngModel)]="tourLog.totalDistance"
+            placeholder="Distance"
+            required
+            min="0.1"
+            #dist="ngModel"
+            [ngClass]="{ 'is-invalid': dist.invalid && (dist.dirty || dist.touched) }"
+          />
+        </app-form-field>
+
+        <app-form-field
+          label="Time (hrs) *"
+          [showError]="time.invalid && (time.dirty || time.touched)"
+          errorMessage="Time must be > 0."
+        >
+          <input
+            type="number"
+            class="form-control"
+            name="totalTime"
+            [(ngModel)]="tourLog.totalTime"
+            placeholder="Time"
+            required
+            min="0.1"
+            #time="ngModel"
+            [ngClass]="{ 'is-invalid': time.invalid && (time.dirty || time.touched) }"
+          />
+        </app-form-field>
+      </div>
+
+      <div class="form-row">
+        <app-form-field
+          label="Difficulty *"
+          [showError]="diff.invalid && (diff.dirty || diff.touched)"
+          errorMessage="Required."
+        >
+          <select
+            class="form-control"
+            name="difficulty"
+            [(ngModel)]="tourLog.difficulty"
+            required
+            #diff="ngModel"
+            [ngClass]="{ 'is-invalid': diff.invalid && (diff.dirty || diff.touched) }"
+          >
+            <option value="" disabled selected>Choose difficulty</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
+          </select>
+        </app-form-field>
+
+        <app-form-field
+          label="Rating *"
+          [showError]="(rating.value == 0 || rating.invalid) && (rating.dirty || rating.touched)"
+          errorMessage="Required."
+        >
+          <select
+            class="form-control"
+            name="rating"
+            [(ngModel)]="tourLog.rating"
+            required
+            #rating="ngModel"
+            [ngClass]="{ 'is-invalid': rating.invalid && (rating.dirty || rating.touched) }"
+          >
+            <option value="0" disabled selected>Rate your tour</option>
+            <option value="1">1 - Poor</option>
+            <option value="2">2 - Fair</option>
+            <option value="3">3 - Good</option>
+            <option value="4">4 - Very Good</option>
+            <option value="5">5 - Excellent</option>
+          </select>
+        </app-form-field>
+      </div>
+
+      <app-image-upload
+        label="Log Image"
+        [isEditMode]="isEditMode"
+        [previewUrl]="previewUrl"
+        [submitted]="logForm.submitted"
+        (fileSelected)="onImageSelected($event)"
+      >
+      </app-image-upload>
+
+      <app-form-field label="Notes">
+        <textarea
+          class="form-control"
+          rows="3"
+          name="comment"
+          [(ngModel)]="tourLog.comment"
+          placeholder="Enter notes"
+        ></textarea>
+      </app-form-field>
+
+      <app-button
+        type="submit"
+        [disabled]="logForm.invalid || (!isEditMode && !previewUrl) || tourLog.rating == 0"
+        >Save Log</app-button
+      >
+    </form>
+
+    <div class="image-preview">
+      <span>Summary Preview for: {{ tourLog.name || '?' }}</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+<div class="form-group">
+  <label>{{ label }}</label>
+  <ng-content></ng-content>
+  @if (showError) {
+    <small class="error-text">{{ errorMessage }}</small>
+  }
+</div>

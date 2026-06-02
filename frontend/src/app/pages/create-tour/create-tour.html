@@ -1,0 +1,173 @@
+<app-navbar></app-navbar>
+<div class="page-container">
+  <div class="split-layout">
+    <form
+      class="card form-section"
+      #tourForm="ngForm"
+      (ngSubmit)="tourForm.form.valid && saveTour()"
+    >
+      <h2>{{ isEditMode ? 'Modify Tour' : 'Create Tour' }}</h2>
+
+      <app-form-field
+        label="Tour Name *"
+        [showError]="name.invalid && (name.dirty || name.touched)"
+        errorMessage="Tour name must be at least 3 characters long."
+      >
+        <input
+          type="text"
+          class="form-control"
+          name="name"
+          [(ngModel)]="tour.name"
+          placeholder="Enter tour name"
+          required
+          minlength="3"
+          #name="ngModel"
+          [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
+        />
+      </app-form-field>
+
+      <app-form-field label="Description">
+        <textarea
+          class="form-control"
+          rows="3"
+          name="description"
+          [(ngModel)]="tour.description"
+          placeholder="Enter description"
+        ></textarea>
+      </app-form-field>
+
+      <div class="form-row">
+        <app-form-field
+          label="From *"
+          [showError]="startLoc.invalid && (startLoc.dirty || startLoc.touched)"
+          errorMessage="Min 2 characters."
+        >
+          <input
+            type="text"
+            class="form-control"
+            name="startLocation"
+            [(ngModel)]="tour.startLocation"
+            placeholder="Start location"
+            required
+            minlength="2"
+            #startLoc="ngModel"
+            [ngClass]="{ 'is-invalid': startLoc.invalid && (startLoc.dirty || startLoc.touched) }"
+          />
+        </app-form-field>
+
+        <app-form-field
+          label="To *"
+          [showError]="endLoc.invalid && (endLoc.dirty || endLoc.touched)"
+          errorMessage="Min 2 characters."
+        >
+          <input
+            type="text"
+            class="form-control"
+            name="endLocation"
+            [(ngModel)]="tour.endLocation"
+            placeholder="End location"
+            required
+            minlength="2"
+            #endLoc="ngModel"
+            [ngClass]="{ 'is-invalid': endLoc.invalid && (endLoc.dirty || endLoc.touched) }"
+          />
+        </app-form-field>
+      </div>
+
+      <app-form-field
+        label="Choose Transport Type *"
+        [showError]="transport.invalid && (transport.dirty || transport.touched)"
+        errorMessage="Please select a transport type."
+      >
+        <select
+          class="form-control"
+          name="transportType"
+          [(ngModel)]="tour.transportType"
+          required
+          #transport="ngModel"
+          [ngClass]="{ 'is-invalid': transport.invalid && (transport.dirty || transport.touched) }"
+        >
+          <option value="" disabled selected>Choose the transport type</option>
+          <option value="Hike">Hike</option>
+          <option value="Bike">Bike</option>
+          <option value="Running">Running</option>
+          <option value="Vacation">Vacation</option>
+        </select>
+      </app-form-field>
+
+      <div class="form-row">
+        <app-form-field
+          label="Begin Date *"
+          [showError]="startDate.invalid && (startDate.dirty || startDate.touched)"
+          errorMessage="Invalid past date."
+        >
+          <input
+            type="date"
+            class="form-control"
+            name="startDate"
+            [(ngModel)]="tour.startDate"
+            required
+            [min]="todayDate"
+            #startDate="ngModel"
+            [ngClass]="{
+              'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched),
+            }"
+          />
+        </app-form-field>
+
+        <app-form-field
+          label="End Date *"
+          [showError]="endDate.invalid && (endDate.dirty || endDate.touched)"
+          errorMessage="Must be after start date."
+        >
+          <input
+            type="date"
+            class="form-control"
+            name="endDate"
+            [(ngModel)]="tour.endDate"
+            required
+            [min]="tour.startDate || todayDate"
+            #endDate="ngModel"
+            [ngClass]="{ 'is-invalid': endDate.invalid && (endDate.dirty || endDate.touched) }"
+          />
+        </app-form-field>
+      </div>
+
+      <app-image-upload
+        label="Tour Image"
+        [isEditMode]="isEditMode"
+        [previewUrl]="previewUrl"
+        [submitted]="tourForm.submitted"
+        (fileSelected)="onImageSelected($event)"
+      >
+      </app-image-upload>
+
+      <div class="form-row">
+        <app-form-field label="Distance">
+          <input
+            type="text"
+            class="form-control bg-gray"
+            [value]="tour.distance ? tour.distance + ' km' : 'Auto-calculated'"
+            disabled
+          />
+        </app-form-field>
+        <app-form-field label="Est. Time">
+          <input
+            type="text"
+            class="form-control bg-gray"
+            [value]="tour.estimatedTime ? tour.estimatedTime + ' hrs' : 'Auto-calculated'"
+            disabled
+          />
+        </app-form-field>
+      </div>
+
+      <app-button type="submit" [disabled]="tourForm.invalid || (!isEditMode && !previewUrl)"
+        >Save Tour</app-button
+      >
+    </form>
+
+    <div class="map-preview">
+      <span>Map Preview for: {{ tour.startLocation || '?' }} to {{ tour.endLocation || '?' }}</span>
+    </div>
+  </div>
+</div>

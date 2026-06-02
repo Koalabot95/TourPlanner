@@ -1,0 +1,43 @@
+<app-navbar></app-navbar>
+<div class="page-container flex-center">
+  <div class="profile-wrapper">
+    <div class="profile-header">
+      <!-- Dynamically grab the first letter of the user's first name -->
+      <div class="avatar">{{ user.firstName.charAt(0) }}</div>
+      <div class="user-info">
+        <h2>{{ user.firstName }} {{ user.lastName }}</h2>
+        <p>Member since {{ user.joinDate }}</p>
+      </div>
+    </div>
+
+    <div class="profile-body">
+      <div class="info-grid">
+        <div class="info-item">
+          <label>First Name</label>
+          <p>{{ user.firstName }}</p>
+        </div>
+        <div class="info-item">
+          <label>Last Name</label>
+          <p>{{ user.lastName }}</p>
+        </div>
+      </div>
+
+      <div class="info-item full-width">
+        <label>Email</label>
+        <p>{{ user.email }}</p>
+      </div>
+
+      <div class="info-item full-width">
+        <label>Bio</label>
+        <p>{{ user.bio }}</p>
+      </div>
+
+      <div class="action-buttons">
+        <app-button variant="secondary" (buttonClick)="signOut()" routerLink="/login">
+          Sign out
+        </app-button>
+        <app-button variant="danger" (buttonClick)="deleteAccount()">Delete Account</app-button>
+      </div>
+    </div>
+  </div>
+</div>

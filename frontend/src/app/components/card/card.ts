@@ -1,0 +1,18 @@
+import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-card',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './card.html',
+  styleUrl: './card.scss',
+})
+export class Card {
+  @Input() title: string = '';
+  @Input() customClass: string = '';
+
+  // New inputs for image support
+  @Input() imageUrl: string = '';
+  @Input() imageAlt: string = 'Card image';
+}

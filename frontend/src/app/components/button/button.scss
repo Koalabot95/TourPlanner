@@ -1,0 +1,35 @@
+button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  width: 100%; /* Optional: makes it fill its container */
+}
+
+/* Primary variant */
+button.btn-primary {
+  background-color: #111827;
+  color: white;
+}
+
+button.btn-primary:hover {
+  background-color: #1f2937;
+}
+
+/* Secondary variant */
+button.btn-secondary {
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+/* Danger variant */
+button.btn-danger {
+  background-color: #ef4444;
+  color: white;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

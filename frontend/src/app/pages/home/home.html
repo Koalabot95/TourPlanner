@@ -1,0 +1,55 @@
+<app-navbar></app-navbar>
+<div class="page-container">
+  <div class="split-layout">
+    <section class="tours-section">
+      <div class="section-header">
+        <h2>My Tours</h2>
+        <app-button routerLink="/create-tour">+ New Tour</app-button>
+      </div>
+
+      <div class="card-container">
+        @for (tour of tours; track tour.tourId) {
+          <app-card [title]="tour.name" [imageUrl]="getImageUrl(tour.imagePath) || ''">
+            <div card-header-actions>
+              <app-button variant="secondary" [routerLink]="['/tour-details', tour.tourId]"
+                >Details</app-button
+              >
+            </div>
+
+            <p><strong>Route:</strong> {{ tour.startLocation }} ➔ {{ tour.endLocation }}</p>
+            <p><strong>Transport:</strong> {{ tour.transportType }}</p>
+            @if (tour.description) {
+              <p class="description">{{ tour.description }}</p>
+            }
+          </app-card>
+        } @empty {
+          <app-card>
+            <p>You haven't created any tours yet.</p>
+          </app-card>
+        }
+      </div>
+    </section>
+
+    <section class="logs-section">
+      <div class="section-header">
+        <h2>Recent Logs</h2>
+        <app-button routerLink="/create-tour-log">+ New Log</app-button>
+      </div>
+
+      <div class="card-container">
+        @for (log of tourLogs; track log.logId) {
+          <app-log-card
+            [log]="log"
+            [imageUrl]="getImageUrl(log.imagePath) || ''"
+            (delete)="deleteLog($event)"
+          >
+          </app-log-card>
+        } @empty {
+          <app-card>
+            <p>No logs recorded yet.</p>
+          </app-card>
+        }
+      </div>
+    </section>
+  </div>
+</div>

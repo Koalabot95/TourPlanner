@@ -1,0 +1,18 @@
+<div class="card" [ngClass]="customClass">
+  @if (imageUrl) {
+    <div class="card-image-wrapper">
+      <img [src]="imageUrl" [alt]="imageAlt || 'Card image'" class="card-image" />
+    </div>
+  }
+
+  @if (title) {
+    <div class="card-header">
+      <h3 class="card-title">{{ title }}</h3>
+      <ng-content select="[card-header-actions]"></ng-content>
+    </div>
+  }
+
+  <div class="card-body">
+    <ng-content></ng-content>
+  </div>
+</div>

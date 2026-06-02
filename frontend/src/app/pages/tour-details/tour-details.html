@@ -1,0 +1,95 @@
+<app-navbar></app-navbar>
+<div class="page-container">
+  @if (tour) {
+    <div class="header-actions">
+      <h2>{{ tour.name }}</h2>
+      <div class="button-group">
+        <app-button variant="secondary" routerLink="/home">Back</app-button>
+        <app-button variant="primary" [routerLink]="['/edit-tour', tour.tourId]"
+          >Edit Tour</app-button
+        >
+        <app-button variant="danger" (buttonClick)="deleteTour()">Delete Tour</app-button>
+      </div>
+    </div>
+
+    <div class="split-layout">
+      <app-card [imageUrl]="imageUrl || ''" customClass="details-card">
+        <div class="details-grid">
+          <div class="detail-item">
+            <label>Description</label>
+            <p>{{ tour.description || 'No description provided.' }}</p>
+          </div>
+          <div class="detail-item">
+            <label>Route</label>
+            <p>{{ tour.startLocation }} ➔ {{ tour.endLocation }}</p>
+          </div>
+          <div class="detail-item">
+            <label>Transport Type</label>
+            <p>{{ tour.transportType }}</p>
+          </div>
+          <div class="detail-item">
+            <label>Dates</label>
+            <p>{{ tour.startDate | date }} to {{ tour.endDate | date }}</p>
+          </div>
+          <div class="detail-item">
+            <label>Distance</label>
+            <p>{{ tour.distance ? tour.distance + ' km' : 'TBD' }}</p>
+          </div>
+          <div class="detail-item">
+            <label>Estimated Time</label>
+            <p>{{ tour.estimatedTime ? tour.estimatedTime + ' hrs' : 'TBD' }}</p>
+          </div>
+        </div>
+      </app-card>
+
+      <div class="map-placeholder">
+        <div class="map-content">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="48"
+            height="48"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon>
+            <line x1="9" y1="3" x2="9" y2="18"></line>
+            <line x1="15" y1="6" x2="15" y2="21"></line>
+          </svg>
+          <h3>Interactive Map Placeholder</h3>
+          <p>Showing route from {{ tour.startLocation }} to {{ tour.endLocation }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="logs-section mt-4">
+      <div class="section-header">
+        <h3>Tour Logs</h3>
+        <app-button [routerLink]="['/create-tour-log']" [queryParams]="{ tourId: tour.tourId }"
+          >+ Add Log</app-button
+        >
+      </div>
+
+      <div class="card-container">
+        @for (log of tourLogs; track log.logId) {
+          <app-log-card
+            [log]="log"
+            [imageUrl]="getImageUrl(log.imagePath) || ''"
+            (delete)="deleteLog($event)"
+          >
+          </app-log-card>
+        } @empty {
+          <div class="empty-state"><p>No logs recorded for this tour yet.</p></div>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="not-found">
+      <h2>Tour Not Found</h2>
+      <app-button routerLink="/home">Return to Home</app-button>
+    </div>
+  }
+</div>
