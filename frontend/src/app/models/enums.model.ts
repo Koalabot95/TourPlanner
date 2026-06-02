@@ -1,7 +1,7 @@
 export enum TransportType {
-  Bike = 'Bike',
-  Hike = 'Hike',
-  Running = 'Running',
+  Walking = 'Walking',
+  Cycling = 'Cycling',
+  Driving = 'Driving',
 }
 
 export enum Difficulty {
