@@ -13,7 +13,7 @@ export class ImageUpload {
   @Input() isEditMode: boolean = false;
   @Input() previewUrl: string | null = null;
   @Input() submitted: boolean = false;
-
+  // Emits the selected file and its preview URL to the parent component
   @Output() fileSelected = new EventEmitter<{ file: File; preview: string }>();
 
   onFileChange(event: any) {
