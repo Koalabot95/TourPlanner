@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-
+using System.Collections.Generic;
 namespace backend.Models
 {
 
@@ -29,5 +29,11 @@ namespace backend.Models
         public double ChildFriendliness { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+
+        // Eine Tour hat viele TourLogs
+        public ICollection<TourLog> TourLogs { get; set; } = new List<TourLog>();
+
+        // Eine Tour kann viele Bilder in der Galerie haben
+        public ICollection<Image> Images { get; set; } = new List<Image>();
     }
 }

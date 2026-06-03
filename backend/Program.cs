@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using backend.Data;
 using System.Text.Json.Serialization;
+using backend.Interfaces;
+using backend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +42,11 @@ builder.Services.AddScoped<backend.Services.AuthService>();
 // repos: Tour- und Log-Datenbankbefehle auflösen 
 builder.Services.AddScoped<backend.Interfaces.ITourLogRepository, backend.Repositories.TourLogRepository>();
 builder.Services.AddScoped<backend.Interfaces.ITourRepository, backend.Repositories.TourRepository>();
+
+// Image Repository & Service registrieren
+builder.Services.AddScoped<backend.Interfaces.IImageRepository, backend.Repositories.ImageRepository>();
+builder.Services.AddScoped<backend.Interfaces.IImageService, backend.Services.ImageService>();
+
 
 //OpenRouteServiceClient registrieren(Interface, Basis-URL und 10s Timeout)
 builder.Services.AddHttpClient<backend.Interfaces.IOpenRouteServiceClient, backend.Services.OpenRouteServiceClient>(client =>

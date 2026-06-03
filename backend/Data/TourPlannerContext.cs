@@ -93,14 +93,25 @@ namespace backend.Data
             entity.Property(t => t.Popularity).HasColumnName("popularity").HasDefaultValue(0);
             entity.Property(t => t.ChildFriendliness).HasColumnName("child_friendliness").HasDefaultValue(0.0);
 
-        // Beziehung User -> Tours
+             // Beziehung User -> Tours
             entity.HasOne<User>() //Eine Tour gehört zu einem User
                   .WithMany() //Ein User kann viele Touren haben
                   .HasForeignKey(t => t.UserId) //FK: UserId
                   .OnDelete(DeleteBehavior.Cascade); //Wenn User gelöscht, werden alle seine Touren gelöscht
-         });
 
-          
+            // Beziehung Tour -> TourLogs 
+            entity.HasMany(t => t.TourLogs) // Eine Tour hat viele TourLogs
+                  .WithOne(l => l.Tour)     // Ein TourLog gehört zu einer Tour
+                  .HasForeignKey(l => l.TourId)
+                  .OnDelete(DeleteBehavior.Cascade);
+
+            // Beziehung Tour -> Images
+            entity.HasMany(t => t.Images)   // Eine Tour kann viele Bilder haben
+                  .WithOne(i => i.Tour)     // Ein Bild verweist zurück auf die Tour
+                  .HasForeignKey(i => i.TourId)
+                  .OnDelete(DeleteBehavior.Cascade);
+        });
+
 
         //TourLog Mapping
         modelBuilder.Entity<TourLog>(entity =>
@@ -146,10 +157,10 @@ namespace backend.Data
                 .HasColumnName("created_at")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-        // Beziehung Tour -> TourLog
-            entity.HasOne<Tour>()
-                  .WithMany()
-                  .HasForeignKey(l => l.TourId)
+            // Beziehung Tourlog -> Images
+            entity.HasMany(l => l.Images)   // Ein Log kann viele Bilder haben
+                  .WithOne(i => i.TourLog)  // Ein Bild verweist zurück auf das Log
+                  .HasForeignKey(i => i.LogId)
                   .OnDelete(DeleteBehavior.Cascade);
         });
 
@@ -163,8 +174,11 @@ namespace backend.Data
                 .HasColumnName("image_id")
                 .HasDefaultValueSql("gen_random_uuid()");
 
+            entity.Property(i => i.TourId)
+                  .HasColumnName("tour_id").IsRequired(false); // Optional
+
             entity.Property(i => i.LogId)
-                .HasColumnName("log_id");
+                  .HasColumnName("log_id").IsRequired(false);   // Optional
 
             // Pfad & Beschreibung
             entity.Property(i => i.FilePath)
@@ -179,11 +193,6 @@ namespace backend.Data
                 .HasColumnName("uploaded_at")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-        // Beziehung TourLog -> Image
-            entity.HasOne<TourLog>()
-                  .WithMany()
-                  .HasForeignKey(i => i.LogId)
-                  .OnDelete(DeleteBehavior.Cascade);
     });
 
 

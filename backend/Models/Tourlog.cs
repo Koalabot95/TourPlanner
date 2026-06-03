@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace backend.Models
 {
@@ -15,5 +16,7 @@ namespace backend.Models
         public double TotalTime { get; set; } 
         public int Rating { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public ICollection<Image> Images { get; set; } = new List<Image>();
     }
 }
