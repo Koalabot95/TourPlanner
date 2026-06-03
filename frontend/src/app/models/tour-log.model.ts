@@ -10,6 +10,5 @@ export interface TourLog {
   totalDistance: number;
   totalTime: number;
   rating: number;
-  createdAt?: Date | string;
-  imagePath?: string; // Updated to string to match Tour implementation
+  imagePath: string;
 }

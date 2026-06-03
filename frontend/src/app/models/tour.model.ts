@@ -10,11 +10,7 @@ export interface Tour {
   transportType: TransportType;
   distance: number;
   estimatedTime: number;
-  routeInformation: string;
   mapSnapshotPath: string;
   popularity: number;
-  childfriendliness: number;
-  imagePath?: string;
-  createdAt?: Date | string;
-  updatedAt?: Date | string;
+  imagePath: string;
 }

@@ -3,8 +3,7 @@ export interface User {
   username: string;
   passwordHash: string;
   email: string;
-  createdAt: Date | string;
-  firstName?: string;
-  lastName?: string;
-  bio?: string;
+  firstName: string;
+  lastName: string;
+  bio: string;
 }
