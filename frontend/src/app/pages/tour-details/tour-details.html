@@ -28,10 +28,6 @@
             <p>{{ tour.transportType }}</p>
           </div>
           <div class="detail-item">
-            <label>Dates</label>
-            <p>{{ tour.startDate | date }} to {{ tour.endDate | date }}</p>
-          </div>
-          <div class="detail-item">
             <label>Distance</label>
             <p>{{ tour.distance ? tour.distance + ' km' : 'TBD' }}</p>
           </div>
@@ -42,26 +38,8 @@
         </div>
       </app-tour-card>
 
-      <div class="map-placeholder">
-        <div class="map-content">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"></polygon>
-            <line x1="9" y1="3" x2="9" y2="18"></line>
-            <line x1="15" y1="6" x2="15" y2="21"></line>
-          </svg>
-          <h3>Interactive Map Placeholder</h3>
-          <p>Showing route from {{ tour.startLocation }} to {{ tour.endLocation }}</p>
-        </div>
+      <div class="placeholder-box">
+        <p>Showing route from {{ tour.startLocation }} to {{ tour.endLocation }}</p>
       </div>
     </div>
 
@@ -75,7 +53,7 @@
 
       <div class="card-container">
         @for (log of tourLogs; track log.logId) {
-          <app-tour-log-card 
+          <app-tour-log-card
             [log]="log"
             [imageUrl]="getImageUrl(log.imagePath) || ''"
             (delete)="deleteLog($event)"

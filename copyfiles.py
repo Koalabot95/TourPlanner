@@ -6,7 +6,7 @@ def copy_files_to_single_txt(source_folder, output_file):
     Recursively finds all .html, .scss, and .ts files in source_folder
     and writes their contents into a single output_file.
     """
-    target_extensions = ('.html', '.ts')
+    target_extensions = ('.html', '.scss', '.ts')
 
     with open(output_file, 'w', encoding='utf-8') as outfile:
         for root, dirs, files in os.walk(source_folder):
@@ -15,16 +15,14 @@ def copy_files_to_single_txt(source_folder, output_file):
                     file_path = os.path.join(root, file)
 
                     # Write a header to distinguish files in the output
-                    outfile.write(f"--- BEGIN FILE: {file_path} ---\n\n")
+                    outfile.write(f"--- BEGIN FILE: {file_path} ---\n")
 
                     try:
                         with open(file_path, 'r', encoding='utf-8') as infile:
                             outfile.write(infile.read())
                             outfile.write("\n\n")
                     except Exception as e:
-                        outfile.write(f"Error reading file: {e}\n\n")
-
-                    outfile.write(f"--- END FILE: {file_path} ---\n\n")
+                        outfile.write(f"Error reading file: {e}\n")
 
     print(f"Successfully copied contents to {output_file}")
 
