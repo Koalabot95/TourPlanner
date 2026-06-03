@@ -8,6 +8,7 @@ import { FormField } from '../../components/form-field/form-field';
 import { ImageUpload } from '../../components/image-upload/image-upload';
 import { Tour } from '../../models/tour.model';
 import { TransportType } from '../../models/enums.model';
+import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-create-tour',
@@ -40,6 +41,7 @@ export class CreateTour implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private imageService: ImageService,
   ) {}
 
   ngOnInit() {
@@ -55,10 +57,8 @@ export class CreateTour implements OnInit {
 
   saveTour() {
     const isImageSaved = this.processAndSaveImage();
-
     // Abort saving if image processing failed or is missing on creation
     if (!isImageSaved) return;
-
     this.saveTourDataToStorage();
     this.router.navigate(['/home']);
   }
@@ -71,63 +71,42 @@ export class CreateTour implements OnInit {
     this.isEditMode = true;
     const tours = JSON.parse(localStorage.getItem('tours') || '[]');
     const existingTour = tours.find((t: Tour) => t.tourId === editId);
-
     if (existingTour) {
       this.tour = existingTour;
       this.loadExistingImagePreview(this.tour.imagePath ?? '');
     }
   }
 
-  // Fetches the image data from local storage if an image path exists
+  // Fetches the image data via the ImageService
   private loadExistingImagePreview(imagePath: string) {
-    if (!imagePath) return;
-
-    const globalImages = JSON.parse(localStorage.getItem('global_images') || '[]');
-    const imgRecord = globalImages.find((img: any) => img.filename === imagePath);
-
-    if (imgRecord) {
-      this.previewUrl = imgRecord.data;
-    }
+    this.previewUrl = this.imageService.getPreviewUrl(imagePath);
   }
 
-  // Handles naming, saving, and storing the image file. Returns true if successful/valid.
+  // Delegates image naming and storage to the ImageService
   private processAndSaveImage(): boolean {
-    let imageFilename = this.tour.imagePath || '';
-
-    // If the user selected a new file, process it
-    if (this.selectedFile && this.previewUrl) {
-      imageFilename = `tour-${Date.now()}-${this.selectedFile.name}`;
-      const globalImages = JSON.parse(localStorage.getItem('global_images') || '[]');
-      globalImages.push({ filename: imageFilename, data: this.previewUrl });
-
-      try {
-        localStorage.setItem('global_images', JSON.stringify(globalImages));
-      } catch (e) {
-        alert('Storage full! Could not save image.');
-        return false; // Stop the save process
-      }
-    }
-
+    const newFilename = this.imageService.processAndSaveImage(
+      this.selectedFile,
+      this.previewUrl,
+      this.tour.imagePath,
+      'tour',
+    );
     // Require an image if we are creating a brand new tour
-    if (!imageFilename && !this.isEditMode) {
+    if (!newFilename && !this.isEditMode) {
       return false;
     }
-
-    this.tour.imagePath = imageFilename;
-    return true; // Image processed successfully (or wasn't required to change)
+    this.tour.imagePath = newFilename || '';
+    return true;
   }
 
   // Pushes the finalized tour object into the local storage array
   private saveTourDataToStorage() {
     const existingTours = JSON.parse(localStorage.getItem('tours') || '[]');
-
     if (this.isEditMode) {
       const index = existingTours.findIndex((t: Tour) => t.tourId === this.tour.tourId);
       if (index !== -1) existingTours[index] = this.tour;
     } else {
       existingTours.push(this.tour);
     }
-
     localStorage.setItem('tours', JSON.stringify(existingTours));
   }
 }

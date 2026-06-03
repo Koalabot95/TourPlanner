@@ -9,6 +9,7 @@ import { ImageUpload } from '../../components/image-upload/image-upload';
 import { TourLog } from '../../models/tour-log.model';
 import { Tour } from '../../models/tour.model';
 import { Difficulty } from '../../models/enums.model';
+import { ImageService } from '../../services/image.service';
 
 @Component({
   selector: 'app-create-tour-log',
@@ -40,6 +41,7 @@ export class CreateTourLog implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
+    private imageService: ImageService,
   ) {}
 
   ngOnInit() {
@@ -85,7 +87,6 @@ export class CreateTourLog implements OnInit {
     this.isEditMode = true;
     const logs = JSON.parse(localStorage.getItem('tourLogs') || '[]');
     const existingLog = logs.find((l: TourLog) => l.logId === logId);
-
     if (existingLog) {
       this.tourLog = existingLog;
       this.loadExistingImagePreview(this.tourLog.imagePath ?? '');
@@ -102,52 +103,33 @@ export class CreateTourLog implements OnInit {
     });
   }
 
-  // Fetches preview image from storage for edit mode
+  // Fetches the image data via the ImageService
   private loadExistingImagePreview(imagePath: string) {
-    if (!imagePath) return;
-
-    const globalImages = JSON.parse(localStorage.getItem('global_images') || '[]');
-    const imgRecord = globalImages.find((img: any) => img.filename === imagePath);
-
-    if (imgRecord) {
-      this.previewUrl = imgRecord.data;
-    }
+    this.previewUrl = this.imageService.getPreviewUrl(imagePath);
   }
 
-  // Handles naming, storing, and validating the log image
+  // Delegates image naming and storage to the ImageService
   private processAndSaveImage(): boolean {
-    let imageFilename = this.tourLog.imagePath || '';
-
-    if (this.selectedFile && this.previewUrl) {
-      imageFilename = `log-${Date.now()}-${this.selectedFile.name}`;
-      const globalImages = JSON.parse(localStorage.getItem('global_images') || '[]');
-      globalImages.push({ filename: imageFilename, data: this.previewUrl });
-
-      try {
-        localStorage.setItem('global_images', JSON.stringify(globalImages));
-      } catch (e) {
-        alert('Storage full! Could not save log image.');
-        return false;
-      }
-    }
-
-    if (!imageFilename && !this.isEditMode) return false;
-
-    this.tourLog.imagePath = imageFilename;
+    const newFilename = this.imageService.processAndSaveImage(
+      this.selectedFile,
+      this.previewUrl,
+      this.tourLog.imagePath,
+      'log',
+    );
+    if (!newFilename && !this.isEditMode) return false;
+    this.tourLog.imagePath = newFilename || '';
     return true;
   }
 
   // Pushes the log object into the localStorage array
   private saveLogDataToStorage() {
     const existingLogs = JSON.parse(localStorage.getItem('tourLogs') || '[]');
-
     if (this.isEditMode) {
       const index = existingLogs.findIndex((l: TourLog) => l.logId === this.tourLog.logId);
       if (index !== -1) existingLogs[index] = this.tourLog;
     } else {
       existingLogs.push(this.tourLog);
     }
-
     localStorage.setItem('tourLogs', JSON.stringify(existingLogs));
   }
 
