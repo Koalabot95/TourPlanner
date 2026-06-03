@@ -3,6 +3,9 @@
 ## 1. Executive Summary
 This document outlines the core architectural and UI/UX design decisions for the Tour Manager Angular frontend. The primary objectives of this architecture are **maintainability**, **scalability**, and **DRY (Don't Repeat Yourself) principles**. The project is structured to support a seamless transition from a local-storage-based prototype to a fully integrated backend REST API.
 
+Comparing with the wireframe, we made some changes to Dashoboard and Logbook UI for simplicity. The Home page (Dashboard in wireframe) now displays the 
+tours and tour log entries. This eliminated the need for a separate Logbook page.
+
 ---
 
 ## 2. Architectural Decisions
