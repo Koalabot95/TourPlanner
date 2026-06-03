@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
 using backend.Models;
-using backend.Services; 
+using backend.Services;
 
-namespace backend.Interfaces;
-
-public interface IOpenRouteServiceClient
+namespace backend.Interfaces
 {
-    Task<RouteResult?> GetRouteAsync(string start, string end, TransportMode type);
+
+    public interface IOpenRouteServiceClient
+    {
+        Task<RouteResult?> GetRouteAsync(string start, string end, TransportMode type);
+    }
 }
