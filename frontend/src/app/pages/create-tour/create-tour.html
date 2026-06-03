@@ -10,7 +10,6 @@
 
       <app-form-field
         label="Tour Name *"
-        [showError]="name.invalid && (name.dirty || name.touched)"
         errorMessage="Tour name must be at least 3 characters long."
       >
         <input
@@ -22,7 +21,7 @@
           required
           minlength="3"
           #name="ngModel"
-          [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
+          [class.is-invalid]="name.invalid && (name.dirty || name.touched)"
         />
       </app-form-field>
 
@@ -37,11 +36,7 @@
       </app-form-field>
 
       <div class="form-row">
-        <app-form-field
-          label="From *"
-          [showError]="startLoc.invalid && (startLoc.dirty || startLoc.touched)"
-          errorMessage="Min 2 characters."
-        >
+        <app-form-field label="From *" errorMessage="Min 2 characters.">
           <input
             type="text"
             class="form-control"
@@ -51,15 +46,11 @@
             required
             minlength="2"
             #startLoc="ngModel"
-            [ngClass]="{ 'is-invalid': startLoc.invalid && (startLoc.dirty || startLoc.touched) }"
+            [class.is-invalid]="startLoc.invalid && (startLoc.dirty || startLoc.touched)"
           />
         </app-form-field>
 
-        <app-form-field
-          label="To *"
-          [showError]="endLoc.invalid && (endLoc.dirty || endLoc.touched)"
-          errorMessage="Min 2 characters."
-        >
+        <app-form-field label="To *" errorMessage="Min 2 characters.">
           <input
             type="text"
             class="form-control"
@@ -69,14 +60,13 @@
             required
             minlength="2"
             #endLoc="ngModel"
-            [ngClass]="{ 'is-invalid': endLoc.invalid && (endLoc.dirty || endLoc.touched) }"
+            [class.is-invalid]="endLoc.invalid && (endLoc.dirty || endLoc.touched)"
           />
         </app-form-field>
       </div>
 
       <app-form-field
         label="Choose Transport Type *"
-        [showError]="transport.invalid && (transport.dirty || transport.touched)"
         errorMessage="Please select a transport type."
       >
         <select
@@ -85,7 +75,7 @@
           [(ngModel)]="tour.transportType"
           required
           #transport="ngModel"
-          [ngClass]="{ 'is-invalid': transport.invalid && (transport.dirty || transport.touched) }"
+          [class.is-invalid]="transport.invalid && (transport.dirty || transport.touched)"
         >
           <option value="" disabled selected>Choose the transport type</option>
           <option value="Walking">Walking</option>

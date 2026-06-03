@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, ContentChild, Input } from '@angular/core';
+import { NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-form-field',
@@ -8,6 +9,6 @@ import { Component, Input } from '@angular/core';
 })
 export class FormField {
   @Input() label: string = '';
-  @Input() showError: boolean | null = false;
   @Input() errorMessage: string = '';
+  @ContentChild(NgModel) control?: NgModel;
 }

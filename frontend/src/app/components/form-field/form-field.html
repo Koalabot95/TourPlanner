@@ -1,7 +1,8 @@
 <div class="form-group">
   <label>{{ label }}</label>
   <ng-content></ng-content>
-  @if (showError) {
+
+  @if (control && control.invalid && (control.dirty || control.touched)) {
     <small class="error-text">{{ errorMessage }}</small>
   }
 </div>
