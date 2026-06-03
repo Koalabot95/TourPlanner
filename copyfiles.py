@@ -29,7 +29,7 @@ def copy_files_to_single_txt(source_folder, output_file):
 
 # Usage Configuration
 # Replace '.' with your specific folder path if needed
-source_directory = './frontend/src/app'
+source_directory = './frontend/src/'
 output_filename = 'combined_code.txt'
 
 if __name__ == "__main__":
