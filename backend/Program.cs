@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. CORS -> erlaubt Anbdinung ans Frontend
+// 1. CORS -> erlaubt Anbindung ans Frontend
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularDevPolicy", policy =>
@@ -26,7 +26,6 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<TourPlannerContext>(options =>
     options.UseNpgsql(connectionString));
 
-
 // 4. Controller & Enum-Konvertierung
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -39,6 +38,7 @@ builder.Services.AddSwaggerGen();
 // 5. Auth Services
 builder.Services.AddScoped<backend.Interfaces.IUserRepository, backend.Repositories.UserRepository>();
 builder.Services.AddScoped<backend.Services.AuthService>();
+builder.Services.AddScoped<backend.Interfaces.IUserService, backend.Services.UserService>();
 
 // repos: Tour- und Log-Datenbankbefehle auflösen 
 builder.Services.AddScoped<backend.Interfaces.ITourLogRepository, backend.Repositories.TourLogRepository>();
@@ -51,7 +51,6 @@ builder.Services.AddScoped<backend.Interfaces.ITourLogService, backend.Services.
 // Image Repository & Service registrieren
 builder.Services.AddScoped<backend.Interfaces.IImageRepository, backend.Repositories.ImageRepository>();
 builder.Services.AddScoped<backend.Interfaces.IImageService, backend.Services.ImageService>();
-
 
 //OpenRouteServiceClient registrieren(Interface, Basis-URL und 10s Timeout)
 builder.Services.AddHttpClient<backend.Interfaces.IOpenRouteServiceClient, backend.Services.OpenRouteServiceClient>(client =>
@@ -83,15 +82,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-
-
 // 6. log4net
 var logRepository = log4net.LogManager.GetRepository(System.Reflection.Assembly.GetEntryAssembly()!);
 log4net.Config.XmlConfigurator.Configure(logRepository, new System.IO.FileInfo("Logging/log4net.config"));
 
 var app = builder.Build();
 
-// 7 . EF Core Migration
+// 7. EF Core Migration
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<TourPlannerContext>();
@@ -99,7 +96,6 @@ using (var scope = app.Services.CreateScope())
 }
 
 // 8. Middleware Pipeline
-
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
@@ -111,10 +107,10 @@ else
     app.UseHttpsRedirection();
 }
 
-app.UseRouting();           
-app.UseCors("AngularDevPolicy");  
-app.UseAuthentication();    
-app.UseAuthorization();    
-app.MapControllers();   
+app.UseRouting();
+app.UseCors("AngularDevPolicy");
+app.UseAuthentication();
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
