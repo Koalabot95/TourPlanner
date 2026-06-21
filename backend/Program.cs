@@ -48,6 +48,9 @@ builder.Services.AddScoped<backend.Interfaces.ITourRepository, backend.Repositor
 builder.Services.AddScoped<backend.Interfaces.ITourService, backend.Services.TourService>();
 builder.Services.AddScoped<backend.Interfaces.ITourLogService, backend.Services.TourLogService>();
 
+// Search Service registrieren
+builder.Services.AddScoped<backend.Interfaces.ISearchService, backend.Services.SearchService>();
+
 // Image Repository & Service registrieren
 builder.Services.AddScoped<backend.Interfaces.IImageRepository, backend.Repositories.ImageRepository>();
 builder.Services.AddScoped<backend.Interfaces.IImageService, backend.Services.ImageService>();
