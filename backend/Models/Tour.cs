@@ -21,8 +21,8 @@ namespace backend.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public TransportMode TransportType { get; set; } = TransportMode.Walking;
-        public double Distance { get; set; }
-        public double EstimatedTime { get; set; }
+        public double? Distance { get; set; }
+        public double? EstimatedTime { get; set; }
         public string? RouteInformation { get; set; }
         public string? MapSnapshotPath { get; set; }
         public int Popularity { get; set; }
