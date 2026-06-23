@@ -87,9 +87,9 @@ public class AuthService
         // JWT payload: userId, username, email, expiry
         var claims = new[]
         {
-            new Claim("userId", user.UserId.ToString()),
-            new Claim("username", user.Username),
-            new Claim("email", user.Email),
+            new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
+            new Claim(ClaimTypes.Name, user.Username),
+            new Claim(ClaimTypes.Email, user.Email),
         };
 
         var token = new JwtSecurityToken(

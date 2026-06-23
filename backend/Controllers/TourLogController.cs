@@ -55,7 +55,7 @@ namespace backend.Controllers
             if (result.StatusCode != 201)
                 return StatusCode(result.StatusCode, new { field = result.ErrorField, message = result.ErrorMessage });
 
-            return CreatedAtAction(nameof(GetLogById), new { id = result.Log!.LogId }, result.Log);
+            return StatusCode(201, result.Log);
         }
 
         [HttpPut("logs/{id}")]
@@ -69,7 +69,7 @@ namespace backend.Controllers
             if (result.StatusCode != 200)
                 return StatusCode(result.StatusCode, new { field = result.ErrorField, message = result.ErrorMessage });
 
-            return Ok(result.Log);
+            return StatusCode(201, result.Log);
         }
 
         [HttpDelete("logs/{id}")]

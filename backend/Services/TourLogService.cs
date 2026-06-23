@@ -75,6 +75,7 @@ namespace backend.Services
                 Difficulty = dto.Difficulty,
                 TotalDistance = dto.TotalDistance,
                 TotalTime = dto.TotalTime,
+                Rating = dto.Rating,
                 CreatedAt = DateTime.UtcNow
             };
 
@@ -114,6 +115,7 @@ namespace backend.Services
             log.Difficulty = dto.Difficulty;
             log.TotalDistance = dto.TotalDistance;
             log.TotalTime = dto.TotalTime;
+            log.Rating = dto.Rating;
 
             await _logRepository.UpdateAsync(log);
             await RecalculateTourStatsAsync(log.TourId);
