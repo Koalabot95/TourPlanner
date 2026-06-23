@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root' // Service überall in der App verfügbar
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:5054/api/auth'; 
+  private apiUrl = '/api/auth'; 
 
   constructor(private http: HttpClient) { }
 

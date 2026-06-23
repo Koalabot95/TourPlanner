@@ -18,7 +18,7 @@ namespace backend.Repositories
             => await _context.Users.AnyAsync(u => u.Username == username);
 
         public async Task<bool> EmailExistsAsync(string email)
-       => await _context.Users.AnyAsync(u => u.Email == email);
+            => await _context.Users.AnyAsync(u => u.Email == email);
 
         public async Task<Guid> CreateUserAsync(User user)
         {
