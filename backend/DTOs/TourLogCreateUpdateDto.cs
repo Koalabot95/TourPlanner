@@ -5,8 +5,9 @@ namespace backend.DTOs
 {
     public class TourLogCreateUpdateDto
     {
-        [StringLength(100, ErrorMessage = "Der Name darf maximal 100 Zeichen lang sein.")]
-        public string? Name { get; set; }
+        [Required]
+        [StringLength(100, ErrorMessage = "Der Name muss zwischen 1 und 100 Zeichen lang sein.")]
+        public string Name { get; set; }
 
         [Required(ErrorMessage = "Das Datum und die Uhrzeit sind erforderlich.")]
         public DateTime DateTime { get; set; }
