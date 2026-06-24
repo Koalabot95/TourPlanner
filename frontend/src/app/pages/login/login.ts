@@ -27,7 +27,7 @@ export class Login {
   ) {}
 
   redirect() {
-    this.router.navigate(['/register']); 
+    this.router.navigate(['/home']); 
   }
 
   login() {
