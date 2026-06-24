@@ -26,8 +26,8 @@ export class Login {
     private authService: AuthService 
   ) {}
 
-  redirect(){
-    this.router.navigate(['/home']);
+  redirect() {
+    this.router.navigate(['/register']); 
   }
 
   login() {
@@ -41,7 +41,7 @@ export class Login {
         
         
         if (response && response.token) {
-          localStorage.setItem('token', response.token);
+          localStorage.setItem('auth_token', response.token);
         }
         
         
