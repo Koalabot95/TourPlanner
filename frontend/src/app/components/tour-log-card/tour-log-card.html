@@ -1,4 +1,4 @@
-<app-tour-card [title]="log.name" [imageUrl]="imageUrl">
+<app-tour-card [title]="log.name || 'Unnamed Log'" [imageUrl]="imageUrl">
   <div card-header-actions class="log-actions">
     <a [routerLink]="['/edit-tour-log', log.logId]" class="action-link">Edit</a>
     <a (click)="delete.emit(log.logId)" class="action-link danger">Delete</a>
@@ -10,8 +10,8 @@
   <p><strong>Rating:</strong> {{ log.rating }} / 5</p>
 
   @if (log.comment) {
-    <p class="comment">
-      <em>"{{ log.comment }}"</em>
-    </p>
+  <p class="comment">
+    <em>"{{ log.comment }}"</em>
+  </p>
   }
 </app-tour-card>

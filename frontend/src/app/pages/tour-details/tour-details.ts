@@ -7,6 +7,8 @@ import { TourCard } from '../../components/tour-card/tour-card';
 import { TourLogCard } from '../../components/tour-log-card/tour-log-card';
 import { Tour } from '../../models/tour.model';
 import { TourLog } from '../../models/tour-log.model';
+import { TourService } from '../../services/tour.service'; 
+import { TourLogService } from '../../services/tour-log.service'; 
 
 @Component({
   selector: 'app-tour-details',
@@ -17,14 +19,15 @@ import { TourLog } from '../../models/tour-log.model';
 })
 export class TourDetails implements OnInit {
   tour: Tour | null = null;
-  imageUrl: string | null = null;
   tourLogs: TourLog[] = [];
-  imageCache: Map<string, string> = new Map();
+  imageUrl: string = '';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-  ) {}
+    private tourService: TourService, 
+    private tourLogService: TourLogService 
+  ) { }
 
   ngOnInit() {
     this.loadData();
@@ -32,51 +35,43 @@ export class TourDetails implements OnInit {
 
   loadData() {
     const id = this.route.snapshot.paramMap.get('id');
-    const tours = JSON.parse(localStorage.getItem('tours') || '[]');
-    this.tour = tours.find((t: Tour) => t.tourId === id) || null;
+    if (!id) return;
 
-    const globalImages = JSON.parse(localStorage.getItem('global_images') || '[]');
-    globalImages.forEach((img: { filename: string; data: string }) => {
-      this.imageCache.set(img.filename, img.data);
+    // 1. Tour aus der API laden
+    this.tourService.getTours().subscribe({
+      next: (tours) => {
+        this.tour = tours.find((t: Tour) => t.tourId === id) || null;
+        this.imageUrl = this.tour?.mapSnapshotPath || '';
+      },
+      error: (err) => console.error('Fehler beim Laden der Tour-Details:', err)
     });
 
-    if (this.tour && this.tour.imagePath) {
-      this.imageUrl = this.imageCache.get(this.tour.imagePath) || null;
-    }
-
-    const allLogs = JSON.parse(localStorage.getItem('tourLogs') || '[]');
-    this.tourLogs = allLogs.filter((l: TourLog) => l.tourId === id);
-  }
-
-  getImageUrl(filename: string | undefined): string | null {
-    if (!filename) return null;
-    return this.imageCache.get(filename) || null;
+    // 2. Zugehörige Logs aus der API laden
+    this.tourLogService.getLogsForTour(id).subscribe({
+      next: (logs) => {
+        this.tourLogs = logs;
+      },
+      error: (err) => console.error('Fehler beim Laden der Tour-Logs:', err)
+    });
   }
 
   deleteTour() {
-    if (
-      confirm(
-        'Are you sure you want to delete this tour? This will also delete all associated logs.',
-      )
-    ) {
-      let tours = JSON.parse(localStorage.getItem('tours') || '[]');
-      tours = tours.filter((t: Tour) => t.tourId !== this.tour?.tourId);
-      localStorage.setItem('tours', JSON.stringify(tours));
-
-      let allLogs = JSON.parse(localStorage.getItem('tourLogs') || '[]');
-      allLogs = allLogs.filter((l: TourLog) => l.tourId !== this.tour?.tourId);
-      localStorage.setItem('tourLogs', JSON.stringify(allLogs));
-
+    if (confirm('Are you sure you want to delete this tour? This will also delete all associated logs.')) {
+      // TODO: Später deleteTour im TourService implementieren
+      // Da OnDelete(DeleteBehavior.Cascade) im Backend aktiv ist, löscht Postgres die Logs automatisch!
       this.router.navigate(['/home']);
     }
   }
 
   deleteLog(logId: string) {
     if (confirm('Are you sure you want to delete this log?')) {
-      let allLogs = JSON.parse(localStorage.getItem('tourLogs') || '[]');
-      allLogs = allLogs.filter((l: TourLog) => l.logId !== logId);
-      localStorage.setItem('tourLogs', JSON.stringify(allLogs));
-      this.tourLogs = allLogs.filter((l: TourLog) => l.tourId === this.tour?.tourId);
+      this.tourLogService.deleteLog(logId).subscribe({
+        next: () => {
+          // Liste nach dem Löschen aktualisieren
+          this.tourLogs = this.tourLogs.filter((l: TourLog) => l.logId !== logId);
+        },
+        error: (err) => console.error('Fehler beim Löschen des Logs:', err)
+      });
     }
   }
 }

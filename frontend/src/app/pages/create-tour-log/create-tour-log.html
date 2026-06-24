@@ -119,11 +119,8 @@
         ></textarea>
       </app-form-field>
 
-      <app-button
-        type="submit"
-        [disabled]="logForm.invalid || (!isEditMode && !previewUrl) || tourLog.rating == 0"
-        >Save Log</app-button
-      >
+      <app-button type="submit" [disabled]="logForm.invalid || tourLog.rating == 0">Save Log</app-button>
+
     </form>
 
     <div class="placeholder-box">

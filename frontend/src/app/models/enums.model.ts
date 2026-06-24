@@ -1,4 +1,4 @@
-export enum TransportType {
+export enum TransportMode {
   Walking = 'Walking',
   Cycling = 'Cycling',
   Driving = 'Driving',

@@ -112,7 +112,7 @@
         </app-form-field>
       </div>
 
-      <app-button type="submit" [disabled]="tourForm.invalid || (!isEditMode && !previewUrl)"
+      <app-button type="submit" [disabled]="!!tourForm.invalid"
         >Save Tour</app-button
       >
     </form>

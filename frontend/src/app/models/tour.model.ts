@@ -1,16 +1,21 @@
-import { TransportType } from './enums.model';
+import { TransportMode } from './enums.model';
 
 export interface Tour {
-  tourId: string;
+  tourId?: string;         
   userId: string;
   name: string;
-  description: string;
+  description?: string;    
   startLocation: string;
   endLocation: string;
-  transportType: TransportType;
-  distance: number;
-  estimatedTime: number;
-  mapSnapshotPath: string;
+  startDate: string | Date; 
+  endDate: string | Date;  
+  transportType: TransportMode;
+  distance?: number;
+  estimatedTime?: number;
+  routeInformation?: string;
+  mapSnapshotPath?: string;
   popularity: number;
-  imagePath: string;
+  childFriendliness: number;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }

@@ -9,7 +9,7 @@
 
       <div class="card-container">
         @for (tour of tours; track tour.tourId) {
-          <app-tour-card [title]="tour.name" [imageUrl]="getImageUrl(tour.imagePath) || ''">
+          <app-tour-card [title]="tour.name" [imageUrl]="''">
             <div card-header-actions>
               <app-button variant="secondary" [routerLink]="['/tour-details', tour.tourId]"
                 >Details</app-button
@@ -40,7 +40,7 @@
         @for (log of tourLogs; track log.logId) {
           <app-tour-log-card
             [log]="log"
-            [imageUrl]="getImageUrl(log.imagePath) || ''"
+            [imageUrl]="''"
             (delete)="deleteLog($event)"
           >
           </app-tour-log-card>
