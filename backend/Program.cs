@@ -124,7 +124,27 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<TourPlannerContext>();
-    dbContext.Database.Migrate();
+
+    int retries = 10;
+    while (retries > 0)
+    {
+        try
+        {
+            dbContext.Database.Migrate();
+            break;
+        }
+        catch (Exception ex)
+        {
+            retries--;
+            Console.WriteLine($"Datenbank ist noch nicht bereit. Warte... ({retries} Versuche übrig)");
+            if (retries == 0)
+            {
+                Console.WriteLine("Datenbank-Migration fehlgeschlagen.");
+                throw;
+            }
+            System.Threading.Thread.Sleep(5000); // 3 Sekunden warten vor dem nächsten Versuch
+        }
+    }
 }
 
 // 8. Middleware Pipeline
