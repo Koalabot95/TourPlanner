@@ -120,7 +120,7 @@ log4net.Config.XmlConfigurator.Configure(logRepository, new System.IO.FileInfo("
 
 var app = builder.Build();
 
-// 7. EF Core Migration
+// 7. EF Core Migration -> sleep und retries hinzugefügt, falls die db länger braucht
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<TourPlannerContext>();
@@ -159,10 +159,26 @@ else
     app.UseHttpsRedirection();
 }
 
+//Pfad zum Angular-Ausgabeordner definieren
+var angularDistPath = Path.Combine(builder.Environment.ContentRootPath, "wwwroot", "browser");
+
+var fileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(angularDistPath);
+
+app.UseDefaultFiles(new DefaultFilesOptions
+{
+    FileProvider = fileProvider
+});
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = fileProvider,
+    ServeUnknownFileTypes = true 
+});
 app.UseRouting();
 app.UseCors("AngularDevPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapFallbackToFile("browser/index.html");
 
 app.Run();
