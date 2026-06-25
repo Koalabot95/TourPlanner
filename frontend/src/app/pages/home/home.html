@@ -9,23 +9,21 @@
 
       <div class="card-container">
         @for (tour of tours; track tour.tourId) {
-          <app-tour-card [title]="tour.name" [imageUrl]="''">
-            <div card-header-actions>
-              <app-button variant="secondary" [routerLink]="['/tour-details', tour.tourId]"
-                >Details</app-button
-              >
-            </div>
+        <app-tour-card [title]="tour.name" [imageUrl]="''">
+          <div card-header-actions>
+            <app-button variant="secondary" [routerLink]="['/tour-details', tour.tourId]">Details</app-button>
+          </div>
 
-            <p><strong>Route:</strong> {{ tour.startLocation }} ➔ {{ tour.endLocation }}</p>
-            <p><strong>Transport:</strong> {{ tour.transportType }}</p>
-            @if (tour.description) {
-              <p class="description">{{ tour.description }}</p>
-            }
-          </app-tour-card>
+          <p><strong>Route:</strong> {{ tour.startLocation }} ➔ {{ tour.endLocation }}</p>
+          <p><strong>Transport:</strong> {{ tour.transportType }}</p>
+          @if (tour.description) {
+          <p class="description">{{ tour.description }}</p>
+          }
+        </app-tour-card>
         } @empty {
-          <app-tour-card>
-            <p>You haven't created any tours yet.</p>
-          </app-tour-card>
+        <app-tour-card>
+          <p>You haven't created any tours yet.</p>
+        </app-tour-card>
         }
       </div>
     </section>
@@ -38,16 +36,14 @@
 
       <div class="card-container">
         @for (log of tourLogs; track log.logId) {
-          <app-tour-log-card
-            [log]="log"
-            [imageUrl]="''"
-            (delete)="deleteLog($event)"
-          >
-          </app-tour-log-card>
+        <app-tour-log-card [log]="log"
+                           [imageUrl]="''"
+                           (delete)="deleteLog($event)">
+        </app-tour-log-card>
         } @empty {
-          <app-tour-card>
-            <p>No logs recorded yet.</p>
-          </app-tour-card>
+        <app-tour-card>
+          <p>No logs recorded yet.</p>
+        </app-tour-card>
         }
       </div>
     </section>

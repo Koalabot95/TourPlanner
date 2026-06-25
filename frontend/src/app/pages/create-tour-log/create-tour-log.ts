@@ -53,7 +53,7 @@ export class CreateTourLog implements OnInit {
         this.tours = data;
         this.handleRoutingContext();
       },
-      error: (err) => console.error('Fehler beim Laden der Touren:', err)
+      error: (err: any) => console.error('Fehler beim Laden der Touren:', err)
     });
   }
 
@@ -76,12 +76,12 @@ export class CreateTourLog implements OnInit {
       this.navigateAfterSave();
     } else {
       // API-Call
-      this.tourLogService.addLog(this.tourLog).subscribe({
-        next: (savedLog) => {
+      this.tourLogService.addLog(this.tourLog.tourId, this.tourLog).subscribe({
+        next: (savedLog: any) => {
           console.log('Log erfolgreich gespeichert:', savedLog);
           this.navigateAfterSave();
         },
-        error: (err) => {
+        error: (err: any) => {
           console.error('Fehler beim Speichern des Logs:', err);
           alert('Das Log konnte nicht gespeichert werden.');
         }
@@ -100,10 +100,9 @@ export class CreateTourLog implements OnInit {
 
   private loadExistingLogForEditing(logId: string) {
     this.isEditMode = true;
-    // Holt das Log anhand der TourId aus der API
     if (this.tourLog.tourId) {
-      this.tourLogService.getLogsForTour(this.tourLog.tourId).subscribe(logs => {
-        const existingLog = logs.find((l: TourLog) => l.logId === logId);
+      this.tourLogService.getLogsForTour(this.tourLog.tourId).subscribe((logs: any[]) => {
+        const existingLog = logs.find((l: any) => l.logId === logId);
         if (existingLog) this.tourLog = existingLog;
       });
     }

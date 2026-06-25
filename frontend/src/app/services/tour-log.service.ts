@@ -7,25 +7,29 @@ import { TourLog } from '../models/tour-log.model';
   providedIn: 'root'
 })
 export class TourLogService {
-  private apiUrl = '/api/tourlogs'; 
+  private apiUrl = '/api/logs';
 
   constructor(private http: HttpClient) { }
 
+  // GET: /api/logs/tour/{tourId}
   // Alle Logs für eine ganz bestimmte Tour laden
   getLogsForTour(tourId: string): Observable<TourLog[]> {
     return this.http.get<TourLog[]>(`${this.apiUrl}/tour/${tourId}`);
   }
 
-  //Alle Logs laden 
+  // GET: /api/logs
+  // Alle Logs laden für die Home-Übersicht
   getAllLogs(): Observable<any[]> {
-    return this.http.get<any[]>('/api/tourlog/all');
+    return this.http.get<any[]>(this.apiUrl);
   }
 
+  // POST: /api/logs/tour/{tourId}
   // Ein neues Log zu einer Tour hinzufügen
-  addLog(log: TourLog): Observable<TourLog> {
-    return this.http.post<TourLog>(this.apiUrl, log);
+  addLog(tourId: string, log: TourLog): Observable<TourLog> {
+    return this.http.post<TourLog>(`${this.apiUrl}/tour/${tourId}`, log);
   }
 
+  // DELETE: /api/logs/{logId}
   // Ein Log löschen
   deleteLog(logId: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${logId}`);
