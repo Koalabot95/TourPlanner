@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { Navbar } from '../../components/navbar/navbar';
@@ -7,7 +7,7 @@ import { TourCard } from '../../components/tour-card/tour-card';
 import { TourLogCard } from '../../components/tour-log-card/tour-log-card';
 import { Tour } from '../../models/tour.model';
 import { TourLog } from '../../models/tour-log.model';
-import { TourService } from '../../services/tour.service'; 
+import { TourService } from '../../services/tour.service';
 
 @Component({
   selector: 'app-home',
@@ -20,7 +20,7 @@ export class Home implements OnInit {
   tours: Tour[] = [];
   tourLogs: TourLog[] = [];
 
-  constructor(private tourService: TourService) { } 
+  constructor(private tourService: TourService, private cdr: ChangeDetectorRef) { } 
 
   ngOnInit() {
     this.loadData();
@@ -30,6 +30,8 @@ export class Home implements OnInit {
     this.tourService.getTours().subscribe({
       next: (tours) => {
         this.tours = tours;
+
+        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Fehler beim Laden der Tours:', err);
@@ -46,6 +48,7 @@ export class Home implements OnInit {
       allLogs = allLogs.filter((l: TourLog) => l.logId !== logId);
       localStorage.setItem('tourLogs', JSON.stringify(allLogs));
       this.tourLogs = allLogs;
+      this.cdr.detectChanges();
     }
   }
 

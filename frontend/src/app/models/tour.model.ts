@@ -9,7 +9,8 @@ export interface Tour {
   endLocation: string;
   startDate: string | Date; 
   endDate: string | Date;  
-  transportType: TransportMode;
+  //transportType: TransportMode;
+  transportType: string; 
   distance?: number;
   estimatedTime?: number;
   routeInformation?: string;
