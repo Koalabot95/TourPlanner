@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ImageService {
+
+  constructor(private http: HttpClient) { }
+
   getGlobalImages(): any[] {
     return JSON.parse(localStorage.getItem('global_images') || '[]');
   }
@@ -12,6 +17,12 @@ export class ImageService {
     if (!imagePath) return null;
     const imgRecord = this.getGlobalImages().find((img: any) => img.filename === imagePath);
     return imgRecord ? imgRecord.data : null;
+  }
+
+  uploadImage(file: File): Observable<{ imageUrl: string }> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ imageUrl: string }>('/api/image/upload', formData);
   }
 
   processAndSaveImage(

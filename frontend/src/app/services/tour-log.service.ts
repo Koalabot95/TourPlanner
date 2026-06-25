@@ -16,6 +16,11 @@ export class TourLogService {
     return this.http.get<TourLog[]>(`${this.apiUrl}/tour/${tourId}`);
   }
 
+  //Alle Logs laden 
+  getAllLogs(): Observable<any[]> {
+    return this.http.get<any[]>('/api/tourlog/all');
+  }
+
   // Ein neues Log zu einer Tour hinzufügen
   addLog(log: TourLog): Observable<TourLog> {
     return this.http.post<TourLog>(this.apiUrl, log);

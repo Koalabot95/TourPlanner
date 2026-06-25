@@ -7,6 +7,7 @@ import { TourCard } from '../../components/tour-card/tour-card';
 import { TourLogCard } from '../../components/tour-log-card/tour-log-card';
 import { Tour } from '../../models/tour.model';
 import { TourLog } from '../../models/tour-log.model';
+import { TourService } from '../../services/tour.service'; 
 
 @Component({
   selector: 'app-home',
@@ -18,24 +19,25 @@ import { TourLog } from '../../models/tour-log.model';
 export class Home implements OnInit {
   tours: Tour[] = [];
   tourLogs: TourLog[] = [];
-  imageCache: Map<string, string> = new Map();
+
+  constructor(private tourService: TourService) { } 
 
   ngOnInit() {
     this.loadData();
   }
 
   loadData() {
-    this.tours = JSON.parse(localStorage.getItem('tours') || '[]');
-    this.tourLogs = JSON.parse(localStorage.getItem('tourLogs') || '[]');
-    const globalImages = JSON.parse(localStorage.getItem('global_images') || '[]');
-    globalImages.forEach((img: { filename: string; data: string }) => {
-      this.imageCache.set(img.filename, img.data);
+    this.tourService.getTours().subscribe({
+      next: (tours) => {
+        this.tours = tours;
+      },
+      error: (err) => {
+        console.error('Fehler beim Laden der Tours:', err);
+      }
     });
-  }
 
-  getImageUrl(filename: string | undefined): string | null {
-    if (!filename) return null;
-    return this.imageCache.get(filename) || null;
+    // TourLogs noch aus localStorage bis Backend fertig ist
+    this.tourLogs = JSON.parse(localStorage.getItem('tourLogs') || '[]');
   }
 
   deleteLog(logId: string) {
@@ -45,5 +47,9 @@ export class Home implements OnInit {
       localStorage.setItem('tourLogs', JSON.stringify(allLogs));
       this.tourLogs = allLogs;
     }
+  }
+
+  getImageUrl(filename: string | undefined): string | null {
+    return null; // TODO: später vom Backend laden
   }
 }
