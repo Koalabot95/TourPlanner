@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { TourLog } from '../models/tour-log.model';
+import { TourLog, TourLogBackendDto } from '../models/tour-log.model';
 
 @Injectable({
   providedIn: 'root'
@@ -25,12 +25,12 @@ export class TourLogService {
 
   // POST: /api/logs/tour/{tourId}
   // Ein neues Log zu einer Tour hinzufügen
-  addLog(tourId: string, log: TourLog): Observable<TourLog> {
+  addLog(tourId: string, log: TourLogBackendDto): Observable<TourLog> {
     return this.http.post<TourLog>(`${this.apiUrl}/tour/${tourId}`, log);
   }
 
   // Update: /api/logs/{logId}
-  updateLog(logId: string, logData: any): Observable<any> {
+  updateLog(logId: string, logData: TourLogBackendDto): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${logId}`, logData);
   }
 

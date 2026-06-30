@@ -12,3 +12,14 @@ export interface TourLog {
   rating: number;
   createdAt?: string | Date;
 }
+
+export interface TourLogBackendDto {
+  tourId: string;
+  name?: string;
+  dateTime: string;
+  comment?: string;
+  difficulty: string; // C#-DTO kompatibel
+  totalDistance: number;
+  totalTime: number;
+  rating: number;
+}

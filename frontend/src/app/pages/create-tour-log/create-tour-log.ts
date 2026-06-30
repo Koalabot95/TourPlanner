@@ -6,7 +6,7 @@ import { Navbar } from '../../components/navbar/navbar';
 import { Button } from '../../components/button/button';
 import { FormField } from '../../components/form-field/form-field';
 import { ImageUpload } from '../../components/image-upload/image-upload';
-import { TourLog } from '../../models/tour-log.model';
+import { TourLog, TourLogBackendDto } from '../../models/tour-log.model';
 import { Tour } from '../../models/tour.model';
 import { Difficulty } from '../../models/enums.model';
 import { TourService } from '../../services/tour.service'; 
@@ -78,12 +78,25 @@ export class CreateTourLog implements OnInit {
       return;
     }
 
+    let difficultyString = 'Easy'; 
+
+      if (this.tourLog.difficulty === Difficulty.Medium || (this.tourLog.difficulty as any) === 'Medium' || (this.tourLog.difficulty as any) === 1) {
+        difficultyString = 'Medium';
+      } else if (this.tourLog.difficulty === Difficulty.Hard || (this.tourLog.difficulty as any) === 'Hard' || (this.tourLog.difficulty as any) === 2) {
+        difficultyString = 'Hard';
+      }
+
     // Bereinige das Objekt, um sicherzustellen, dass die numerischen Felder korrekt sind
-    const logToSend = {
-      ...this.tourLog,
+    const logToSend: TourLogBackendDto = {
+      tourId: this.tourLog.tourId,
+      name: this.tourLog.name,
+      // .toString() garantiert TypeScript, dass hier ein reiner string übergeben wird
+      dateTime: this.tourLog.dateTime ? this.tourLog.dateTime.toString() : '',
+      comment: this.tourLog.comment,
       totalDistance: +this.tourLog.totalDistance,
       totalTime: +this.tourLog.totalTime,
-      rating: +this.tourLog.rating
+      rating: +this.tourLog.rating,
+      difficulty: difficultyString
     };
 
     // Holt die Log-ID aus den Routenparametern, falls wir uns im Edit-Modus befinden

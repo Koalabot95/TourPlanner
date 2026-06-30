@@ -66,16 +66,18 @@
 
       <div class="form-row">
         <app-form-field label="Difficulty *" errorMessage="Required.">
-          <select class="form-control"
-                  name="difficulty"
-                  [(ngModel)]="tourLog.difficulty"
-                  required
-                  #diff="ngModel"
-                  [class.is-invalid]="diff.invalid && (diff.dirty || diff.touched)">
+          <select
+            class="form-control"
+            name="difficulty"
+            [(ngModel)]="tourLog.difficulty"
+            required
+            #diff="ngModel"
+            [class.is-invalid]="diff.invalid && (diff.dirty || diff.touched)"
+          >
             <option value="" disabled selected>Choose difficulty</option>
-            <option [value]="0">Easy</option>
-            <option [value]="1">Medium</option>
-            <option [value]="2">Hard</option>
+            <option value="Easy">Easy</option>
+            <option value="Medium">Medium</option>
+            <option value="Hard">Hard</option>
           </select>
         </app-form-field>
 
