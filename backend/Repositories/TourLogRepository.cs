@@ -28,7 +28,7 @@ namespace backend.Repositories
         public async Task<TourLog?> GetByIdAsync(Guid id)
         {
             return await _context.TourLogs
-                .Include(log => log.Tour) 
+                .Include(log => log.Tour)
                 .FirstOrDefaultAsync(log => log.LogId == id);
         }
 
@@ -49,6 +49,13 @@ namespace backend.Repositories
         {
             _context.TourLogs.Remove(log);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<TourLog>> GetAllAsync()
+        {
+            return await _context.TourLogs
+                .Include(l => l.Tour)
+                .ToListAsync();
         }
     }
 }

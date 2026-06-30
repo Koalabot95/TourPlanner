@@ -59,10 +59,21 @@ export class CreateTour implements OnInit {
   }
 
   saveTour() {
-    if (this.isEditMode) {
-      // TODO: Später updateTour im Service aufrufen, falls Edit-Modus aktiv
-      this.router.navigate(['/home']);
+    if (this.isEditMode && this.tour.tourId) {
+      // 1. UPDATE (EDIT) MODUS AKTIV
+      this.tourService.updateTour(this.tour.tourId, this.tour).subscribe({
+        next: (updatedTour) => {
+          console.log('Tour erfolgreich aktualisiert:', updatedTour);
+          // Nach dem Editieren springen wir direkt zurück zur Detailansicht
+          this.router.navigate(['/tour-details', this.tour.tourId]);
+        },
+        error: (err) => {
+          console.error('Fehler beim Aktualisieren der Tour:', err);
+          alert('Die Tour konnte nicht aktualisiert werden.');
+        }
+      });
     } else {
+      // 2. CREATE MODUS AKTIV
       this.tourService.createTour(this.tour).subscribe({
         next: (savedTour) => {
           console.log('Tour erfolgreich in Postgres gespeichert:', savedTour);
@@ -82,11 +93,16 @@ export class CreateTour implements OnInit {
 
     this.isEditMode = true;
 
-    this.tourService.getTours().subscribe(tours => {
-      const existingTour = tours.find((t: Tour) => t.tourId === editId);
-      if (existingTour) {
-        this.tour = existingTour;
-      }
+    // Nutze direkt getTourById statt alle Touren zu laden!
+    this.tourService.getTourById(editId).subscribe({
+      next: (existingTour: Tour) => {
+        if (existingTour) {
+          this.tour = existingTour;
+          // Falls es ein Bild gibt, setze die Preview
+          this.previewUrl = existingTour.mapSnapshotPath || null;
+        }
+      },
+      error: (err) => console.error('Fehler beim Laden der Tour zum Editieren:', err)
     });
   }
 }

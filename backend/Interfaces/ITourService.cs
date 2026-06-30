@@ -18,4 +18,5 @@ public interface ITourService
 
     // DeleteTourAsync - Tour + Cascade (Logs, Images) + MapSnapshot-Datei löschen
     Task<(bool Success, string? ErrorField, string? ErrorMessage, int StatusCode)> DeleteTourAsync(Guid id, string userId);
+
 }

@@ -38,6 +38,7 @@ services:
       - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=tourplanner;Username=user;Password=password
     volumes:
       - ./backend/Uploads:/app/Uploads
+      - ./backend/wwwroot:/app/wwwroot
     depends_on:
       - db
     links:     

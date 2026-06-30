@@ -10,7 +10,7 @@ namespace backend.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("api")]
+    [Route("api/logs")]
     public class TourLogController : ControllerBase
     {
         private readonly ITourLogService _logService;
@@ -20,7 +20,7 @@ namespace backend.Controllers
             _logService = logService;
         }
 
-        [HttpGet("tours/{tourId}/logs")]
+        [HttpGet("tour/{tourId}")]
         public async Task<IActionResult> GetLogsForTour(Guid tourId)
         {
             var userId = GetUserId();
@@ -32,7 +32,7 @@ namespace backend.Controllers
             return Ok(result.Logs);
         }
 
-        [HttpGet("logs/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> GetLogById(Guid id)
         {
             var userId = GetUserId();
@@ -44,7 +44,7 @@ namespace backend.Controllers
             return Ok(result.Log);
         }
 
-        [HttpPost("tours/{tourId}/logs")]
+        [HttpPost("tour/{tourId}")]
         public async Task<IActionResult> CreateLog(Guid tourId, [FromBody] TourLogCreateUpdateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -58,7 +58,7 @@ namespace backend.Controllers
             return StatusCode(201, result.Log);
         }
 
-        [HttpPut("logs/{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateLog(Guid id, [FromBody] TourLogCreateUpdateDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -72,7 +72,7 @@ namespace backend.Controllers
             return StatusCode(201, result.Log);
         }
 
-        [HttpDelete("logs/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLog(Guid id)
         {
             var userId = GetUserId();
@@ -87,6 +87,14 @@ namespace backend.Controllers
         private string GetUserId()
         {
             return User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllLogs()
+        {
+            var userId = GetUserId();
+            var result = await _logService.GetAllLogsAsync(userId);
+            return Ok(result.Logs);
         }
     }
 }

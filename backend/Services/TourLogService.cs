@@ -23,6 +23,24 @@ namespace backend.Services
             _tourRepository = tourRepository;
         }
 
+
+        //Lädt alle Logs für einen bestimmten User und gibt sie sortiert nach Datum zurück
+        public async Task<(IEnumerable<TourLogResponseDto> Logs, int StatusCode)> GetAllLogsAsync(string userId)
+        {
+            _logger.Info($"Hole alle Logs für User {userId}");
+
+            // Alle Logs über das Repository laden
+            var allLogs = await _logRepository.GetAllAsync();
+
+            // Nur Logs behalten, deren dazugehörige Tour dem User gehört
+            var userLogs = allLogs
+                .Where(l => l.Tour != null && l.Tour.UserId.ToString() == userId)
+                .Select(MapToResponseDto)
+                .OrderByDescending(l => l.DateTime);
+
+            return (userLogs, 200);
+        }
+
         public async Task<(IEnumerable<TourLogResponseDto>? Logs, string? ErrorField, string? ErrorMessage, int StatusCode)> GetLogsForTourAsync(Guid tourId, string userId)
         {
             var tour = await _tourRepository.GetByIdAsync(tourId);

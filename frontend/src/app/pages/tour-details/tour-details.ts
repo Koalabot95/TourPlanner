@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../../components/navbar/navbar';
@@ -26,8 +26,9 @@ export class TourDetails implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private tourService: TourService, 
-    private tourLogService: TourLogService 
-  ) { }
+    private tourLogService: TourLogService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.loadData();
@@ -37,29 +38,39 @@ export class TourDetails implements OnInit {
     const id = this.route.snapshot.paramMap.get('id');
     if (!id) return;
 
-    // 1. Tour aus der API laden
-    this.tourService.getTours().subscribe({
-      next: (tours) => {
-        this.tour = tours.find((t: Tour) => t.tourId === id) || null;
+    // 1. Spezifische Tour direkt über die ID laden
+    this.tourService.getTourById(id).subscribe({
+      next: (tourData) => {
+        this.tour = tourData;
         this.imageUrl = this.tour?.mapSnapshotPath || '';
+        this.cdr.detectChanges(); 
       },
-      error: (err) => console.error('Fehler beim Laden der Tour-Details:', err)
+      error: (err) => {
+        console.error('Fehler beim Laden der Tour-Details:', err);
+      }
     });
 
-    // 2. Zugehörige Logs aus der API laden
     this.tourLogService.getLogsForTour(id).subscribe({
       next: (logs) => {
         this.tourLogs = logs;
+        this.cdr.detectChanges(); 
       },
       error: (err) => console.error('Fehler beim Laden der Tour-Logs:', err)
     });
   }
 
   deleteTour() {
+    const id = this.tour?.tourId;
+    if (!id) return;
+
     if (confirm('Are you sure you want to delete this tour? This will also delete all associated logs.')) {
-      // TODO: Später deleteTour im TourService implementieren
-      // Da OnDelete(DeleteBehavior.Cascade) im Backend aktiv ist, löscht Postgres die Logs automatisch!
-      this.router.navigate(['/home']);
+      this.tourService.deleteTour(id).subscribe({
+        next: () => {
+          console.log('Tour erfolgreich gelöscht!');
+          this.router.navigate(['/home']); // Zurück zur Übersicht springen
+        },
+        error: (err) => console.error('Fehler beim Löschen der Tour:', err)
+      });
     }
   }
 
@@ -67,8 +78,8 @@ export class TourDetails implements OnInit {
     if (confirm('Are you sure you want to delete this log?')) {
       this.tourLogService.deleteLog(logId).subscribe({
         next: () => {
-          // Liste nach dem Löschen aktualisieren
           this.tourLogs = this.tourLogs.filter((l: TourLog) => l.logId !== logId);
+          this.cdr.detectChanges();
         },
         error: (err) => console.error('Fehler beim Löschen des Logs:', err)
       });

@@ -12,5 +12,6 @@ namespace backend.Interfaces
         Task<TourLog> CreateAsync(TourLog log);
         Task UpdateAsync(TourLog log);
         Task DeleteAsync(TourLog log);
+        Task<IEnumerable<TourLog>> GetAllAsync();
     }
 }

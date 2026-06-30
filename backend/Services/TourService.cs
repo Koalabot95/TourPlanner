@@ -69,6 +69,8 @@ public class TourService : ITourService
         return (MapToDto(tour), null, null, 200);
     }
 
+
+
     // CREATE: Erstellt eine neue Tour mit OpenRouteService Integration
     public async Task<(TourDto? Tour, string? ErrorField, string? ErrorMessage, int StatusCode)> CreateTourAsync(TourDto dto, string userId)
     {
@@ -260,7 +262,7 @@ public class TourService : ITourService
             return (false, "endLocation", "Der Zielort ist erforderlich.");
 
         // StartDate muss vor EndDate liegen
-        if (dto.StartDate >= dto.EndDate)
+        if (dto.StartDate > dto.EndDate)
             return (false, "startDate", "Das Startdatum muss vor dem Enddatum liegen.");
 
         // TransportType validieren

@@ -35,6 +35,15 @@
             <label>Estimated Time</label>
             <p>{{ tour.estimatedTime ? tour.estimatedTime + ' hrs' : 'TBD' }}</p>
           </div>
+          <div>
+            <span class="label">POPULARITY</span>
+            <p> {{ tour.popularity }}</p>
+          </div>
+
+          <div>
+            <span class="label">CHILD FRIENDLINESS</span>
+            <p> {{ tour.childFriendliness }} / 5</p>
+          </div>
         </div>
       </app-tour-card>
 
