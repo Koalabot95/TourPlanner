@@ -29,6 +29,11 @@ export class TourLogService {
     return this.http.post<TourLog>(`${this.apiUrl}/tour/${tourId}`, log);
   }
 
+  // Update: /api/logs/{logId}
+  updateLog(logId: string, logData: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${logId}`, logData);
+  }
+
   // DELETE: /api/logs/{logId}
   // Ein Log löschen
   deleteLog(logId: string): Observable<void> {

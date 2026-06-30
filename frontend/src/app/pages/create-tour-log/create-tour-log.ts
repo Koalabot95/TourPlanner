@@ -78,7 +78,7 @@ export class CreateTourLog implements OnInit {
       return;
     }
 
-    // Hier bereinigen wir NUR die Felder, die das Backend strikt als Zahl braucht
+    // Bereinige das Objekt, um sicherzustellen, dass die numerischen Felder korrekt sind
     const logToSend = {
       ...this.tourLog,
       totalDistance: +this.tourLog.totalDistance,
@@ -86,10 +86,24 @@ export class CreateTourLog implements OnInit {
       rating: +this.tourLog.rating
     };
 
-    if (this.isEditMode) {
-      this.navigateAfterSave();
+    // Holt die Log-ID aus den Routenparametern, falls wir uns im Edit-Modus befinden
+    const logId = this.route.snapshot.paramMap.get('id');
+
+    if (this.isEditMode && logId) {
+      // 1. UPDATE MODUS: Bestehendes Log ändern
+      this.tourLogService.updateLog(logId, logToSend).subscribe({
+        next: (updatedLog: any) => {
+          console.log('Log erfolgreich aktualisiert:', updatedLog);
+          this.navigateAfterSave();
+        },
+        error: (err: any) => {
+          console.error('Fehler beim Aktualisieren des Logs:', err);
+          alert('Das Log konnte nicht aktualisiert werden.');
+        }
+      });
+
     } else {
-      // Sende das bereinigte Objekt ans Backend
+      // 2. CREATE MODUS: Neues Log anlegen 
       this.tourLogService.addLog(this.tourLog.tourId, logToSend).subscribe({
         next: (savedLog: any) => {
           console.log('Log erfolgreich gespeichert:', savedLog);
@@ -104,29 +118,55 @@ export class CreateTourLog implements OnInit {
   }
 
   private handleRoutingContext() {
+    // Holt die ID aus der URL-Route (/edit-tour-log/:id)
     const editId = this.route.snapshot.paramMap.get('id');
+
     if (editId) {
+      console.log('System-Check: Edit-ID in URL gefunden:', editId);
       this.loadExistingLogForEditing(editId);
     } else {
-      this.prefillTourIdFromQueryParams();
+      this.isEditMode = false;
     }
   }
 
   private loadExistingLogForEditing(logId: string) {
     this.isEditMode = true;
-    if (this.tourLog.tourId) {
-      this.tourLogService.getLogsForTour(this.tourLog.tourId).subscribe((logs: any[]) => {
-        const existingLog = logs.find((l: any) => l.logId === logId);
-        if (existingLog) this.tourLog = existingLog;
-      });
-    }
-  }
 
-  private prefillTourIdFromQueryParams() {
-    this.route.queryParams.subscribe((params) => {
-      if (params['tourId']) {
-        this.tourLog.tourId = params['tourId'];
-        this.updateLogName();
+    this.route.queryParams.subscribe(params => {
+      const tourIdFromUrl = params['tourId'];
+
+      if (tourIdFromUrl) {
+        // 2. Alle Logs für diese Tour laden, um das spezifische Log zu finden
+        this.tourLogService.getLogsForTour(tourIdFromUrl).subscribe({
+          next: (logs: any[]) => {
+            // 3. Passendes Log anhand der logId finden (Case-Insensitive Fallback eingebaut)
+            const existingLog = logs.find((l: any) =>
+              l.logId === logId || l.tourLogId === logId || l.id === logId
+            );
+
+            if (existingLog) {
+              // Daten sicher in unser bestehendes Modell mergen
+              this.tourLog = {
+                ...this.tourLog,
+                ...existingLog,
+                tourId: tourIdFromUrl // Garantiert die korrekte Bindung ans Dropdown
+              };
+
+              // Datum für das HTML-Feld <input type="date"> auf YYYY-MM-DD trimmen
+              if (this.tourLog.dateTime) {
+                this.tourLog.dateTime = this.tourLog.dateTime.toString().split('T')[0];
+              }
+
+              this.updateLogName();
+              console.log('Log erfolgreich für Edit geladen:', this.tourLog);
+            } else {
+              console.warn(`Log mit ID ${logId} wurde unter dieser Tour nicht gefunden.`);
+            }
+          },
+          error: (err) => console.error('Fehler beim Laden der Logs vom Backend:', err)
+        });
+      } else {
+        console.error('Edit-Modus gestartet, aber keine tourId in den QueryParams gefunden!');
       }
     });
   }

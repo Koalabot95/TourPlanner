@@ -1,6 +1,10 @@
 <app-tour-card [title]="log.name || 'Unnamed Log'" [imageUrl]="imageUrl">
   <div card-header-actions class="log-actions">
-    <a [routerLink]="['/edit-tour-log', log.logId]" class="action-link">Edit</a>
+    <a [routerLink]="['/edit-tour-log', log.logId]"
+       [queryParams]="{ tourId: log.tourId }"
+       class="action-link">
+      Edit
+    </a>
     <a (click)="delete.emit(log.logId)" class="action-link danger">Delete</a>
   </div>
 
