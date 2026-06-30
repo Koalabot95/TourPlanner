@@ -71,12 +71,26 @@ export class CreateTourLog implements OnInit {
   }
 
   saveLog() {
+    this.updateLogName();
+
+    if (!this.tourLog.tourId) {
+      alert('Please select a tour first.');
+      return;
+    }
+
+    // Hier bereinigen wir NUR die Felder, die das Backend strikt als Zahl braucht
+    const logToSend = {
+      ...this.tourLog,
+      totalDistance: +this.tourLog.totalDistance,
+      totalTime: +this.tourLog.totalTime,
+      rating: +this.tourLog.rating
+    };
+
     if (this.isEditMode) {
-      // TODO: Später updateLog implementieren
       this.navigateAfterSave();
     } else {
-      // API-Call
-      this.tourLogService.addLog(this.tourLog.tourId, this.tourLog).subscribe({
+      // Sende das bereinigte Objekt ans Backend
+      this.tourLogService.addLog(this.tourLog.tourId, logToSend).subscribe({
         next: (savedLog: any) => {
           console.log('Log erfolgreich gespeichert:', savedLog);
           this.navigateAfterSave();
