@@ -17,17 +17,20 @@ namespace backend.Repositories
             _context = context;
         }
 
-        // READ: Sucht bestimmte Tour
+        // READ: Sucht bestimmte Tour 
         public async Task<Tour?> GetByIdAsync(Guid id)
         {
             return await _context.Tours
+                .Include(t => t.TourLogs) 
                 .FirstOrDefaultAsync(t => t.TourId == id);
         }
 
-        // READ: Holt alle Touren 
+        // READ: Holt alle Touren
         public async Task<IEnumerable<Tour>> GetAllAsync()
         {
-            return await _context.Tours.ToListAsync();
+            return await _context.Tours
+                .Include(t => t.TourLogs) // 
+                .ToListAsync();
         }
 
         // CREATE

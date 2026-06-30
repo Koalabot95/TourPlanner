@@ -35,4 +35,5 @@ public class TourDto
     public int Popularity { get; set; }
     public double ChildFriendliness { get; set; }
     public string? MapSnapshotPath { get; set; }
+    public string? RouteInformation { get; set; }
 }

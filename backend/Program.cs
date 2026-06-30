@@ -89,6 +89,9 @@ builder.Services.AddHttpClient<backend.Interfaces.IOpenRouteServiceClient, backe
 {
     client.BaseAddress = new Uri("https://api.openrouteservice.org/");
     client.Timeout = TimeSpan.FromSeconds(10);
+
+    client.DefaultRequestHeaders.Accept.Clear();
+    client.DefaultRequestHeaders.Add("Accept", "application/json, application/geo+json; charset=utf-8");
 });
 
 // JWT Authentication

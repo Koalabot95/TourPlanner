@@ -114,12 +114,15 @@ public class TourService : ITourService
         {
             tour.Distance = routeInfo.Distance;
             tour.EstimatedTime = routeInfo.EstimatedTime;
+            tour.RouteInformation = routeInfo.GeometryGeoJson;
             _logger.Info($"OpenRouteService erfolgreich: {tour.Distance}km, {tour.EstimatedTime}h");
         }
         else
         {
             _logger.Warn("OpenRouteService nicht verfügbar - Distance & EstimatedTime bleiben null");
         }
+
+
 
         // Speichere in DB
         var createdTour = await _tourRepository.CreateAsync(tour);
@@ -186,12 +189,14 @@ public class TourService : ITourService
             {
                 tour.Distance = routeInfo.Distance;
                 tour.EstimatedTime = routeInfo.EstimatedTime;
+                tour.RouteInformation = routeInfo.GeometryGeoJson;
                 _logger.Info($"Neue Route: {tour.Distance}km, {tour.EstimatedTime}h");
             }
             else
             {
                 tour.Distance = null;
                 tour.EstimatedTime = null;
+                tour.RouteInformation = null;
                 _logger.Warn("OpenRouteService nicht verfügbar");
             }
         }
@@ -272,9 +277,46 @@ public class TourService : ITourService
         return (true, null, null);
     }
 
-    // Mapped Tour-Model zu TourDto
+    // Mapped Tour-Model zu TourDto, berechnet Popularity und ChildFriendliness
     private TourDto MapToDto(Tour tour)
     {
+        // 1. Popularity = Anzahl der zugehörigen TourLogs
+        int calculatedPopularity = tour.TourLogs?.Count ?? 0;
+
+        // 2. ChildFriendliness berechnen
+        double calculatedChildFriendliness = 0.0;
+
+        if (tour.TourLogs != null && tour.TourLogs.Any())
+        {
+            double totalLogPoints = 0;
+
+            foreach (var log in tour.TourLogs)
+            {
+                double logPoints = 0;
+
+                // Schwierigkeit auswerten
+                if (log.Difficulty.ToString() == "Easy") logPoints += 5;
+                else if (log.Difficulty.ToString() == "Medium") logPoints += 3;
+                else logPoints += 1; // Hard
+
+                // Distanz auswerten (TotalDistance)
+                if (log.TotalDistance < 5) logPoints += 5;
+                else if (log.TotalDistance <= 15) logPoints += 3;
+                else logPoints += 1;
+
+                // Zeit auswerten (TotalTime)
+                if (log.TotalTime < 2) logPoints += 5;
+                else if (log.TotalTime <= 5) logPoints += 3;
+                else logPoints += 1;
+
+                // Durchschnitt für diesen Log (max. 5 Punkte)
+                totalLogPoints += (logPoints / 3.0);
+            }
+
+            // Gesamtdurchschnitt über alle Logs berechnen
+            calculatedChildFriendliness = totalLogPoints / tour.TourLogs.Count;
+        }
+
         return new TourDto
         {
             TourId = tour.TourId,
@@ -287,9 +329,11 @@ public class TourService : ITourService
             TransportType = tour.TransportType,
             Distance = tour.Distance,
             EstimatedTime = tour.EstimatedTime,
-            Popularity = tour.Popularity,
-            ChildFriendliness = tour.ChildFriendliness,
-            MapSnapshotPath = tour.MapSnapshotPath
+            MapSnapshotPath = tour.MapSnapshotPath,
+            RouteInformation = tour.RouteInformation,
+            Popularity = calculatedPopularity,
+            // Auf eine Nachkommastelle gerundet (z.B. 4.2)
+            ChildFriendliness = Math.Round(calculatedChildFriendliness, 1)
         };
     }
 }
