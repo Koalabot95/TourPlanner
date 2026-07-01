@@ -12,6 +12,7 @@ public class SearchTourDto
     public string? TransportMode { get; set; }
     public int Popularity { get; set; }
     public decimal ChildFriendliness { get; set; }
+    public bool IsFavorite { get; set; }
 }
 
 public class SearchResultDto

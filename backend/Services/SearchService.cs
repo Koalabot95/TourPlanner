@@ -32,7 +32,7 @@ public class SearchService : ISearchService
         var userIdGuid = Guid.Parse(userId);
         var query = _context.Tours.Where(t => t.UserId == userIdGuid);
 
-        // Search: Name + Description (partial match)
+        // Search: Name + Description (LIKE - partial match)
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
             var term = searchTerm.ToLower();
@@ -90,9 +90,15 @@ public class SearchService : ISearchService
             _logger.Info($"Applied max child-friendliness filter: {maxChildFriendliness}");
         }
 
-        // Get all tours
+        // Get all tours (no pagination)
         var tours = await query
             .OrderBy(t => t.Name)
+            .ToListAsync();
+
+        // Get favorite tour IDs
+        var favoriteTourIds = await _context.FavoriteTours
+            .Where(f => f.UserId == userIdGuid)
+            .Select(f => f.TourId)
             .ToListAsync();
 
         _logger.Info($"Search returned {tours.Count} tours");
@@ -111,7 +117,8 @@ public class SearchService : ISearchService
                 EstimatedTime = (int?)(t.EstimatedTime ?? 0) ?? 0,
                 TransportMode = t.TransportType.ToString(),
                 Popularity = t.Popularity,
-                ChildFriendliness = (decimal)t.ChildFriendliness
+                ChildFriendliness = (decimal)t.ChildFriendliness,
+                IsFavorite = favoriteTourIds.Contains(t.TourId)
             }).ToList()
         };
 

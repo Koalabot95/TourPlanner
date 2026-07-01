@@ -77,8 +77,15 @@ builder.Services.AddScoped<backend.Interfaces.ITourRepository, backend.Repositor
 builder.Services.AddScoped<backend.Interfaces.ITourService, backend.Services.TourService>();
 builder.Services.AddScoped<backend.Interfaces.ITourLogService, backend.Services.TourLogService>();
 
-// Search Service registrieren
+// Search Services registrieren
 builder.Services.AddScoped<backend.Interfaces.ISearchService, backend.Services.SearchService>();
+builder.Services.AddScoped<backend.Interfaces.ITourLogSearchService, backend.Services.TourLogSearchService>();
+
+// Favorite Service registrieren
+builder.Services.AddScoped<backend.Interfaces.IFavoriteService, backend.Services.FavoriteService>();
+
+// Import/Export Service registrieren
+builder.Services.AddScoped<backend.Interfaces.IImportExportService, backend.Services.ImportExportService>();
 
 // Image Repository & Service registrieren
 builder.Services.AddScoped<backend.Interfaces.IImageRepository, backend.Repositories.ImageRepository>();
@@ -175,7 +182,7 @@ app.UseDefaultFiles(new DefaultFilesOptions
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = fileProvider,
-    ServeUnknownFileTypes = true 
+    ServeUnknownFileTypes = true
 });
 app.UseRouting();
 app.UseCors("AngularDevPolicy");

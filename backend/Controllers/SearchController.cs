@@ -27,7 +27,8 @@ public class SearchController : ControllerBase
         [FromQuery] int? minPopularity = null,
         [FromQuery] int? maxPopularity = null,
         [FromQuery] double? minChildFriendliness = null,
-        [FromQuery] double? maxChildFriendliness = null)
+        [FromQuery] double? maxChildFriendliness = null,
+        [FromQuery] bool isFavoritesOnly = false)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
@@ -44,6 +45,13 @@ public class SearchController : ControllerBase
             minChildFriendliness,
             maxChildFriendliness
         );
+
+        // Filter favorites if requested
+        if (isFavoritesOnly && result.Tours != null)
+        {
+            result.Tours = result.Tours.Where(t => t.IsFavorite).ToList();
+            result.TotalCount = result.Tours.Count;
+        }
 
         return Ok(result);
     }
