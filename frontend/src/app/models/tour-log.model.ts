@@ -18,7 +18,7 @@ export interface TourLogBackendDto {
   name?: string;
   dateTime: string;
   comment?: string;
-  difficulty: string; // C#-DTO kompatibel
+  difficulty: string;
   totalDistance: number;
   totalTime: number;
   rating: number;
