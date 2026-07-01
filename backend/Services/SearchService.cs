@@ -22,15 +22,17 @@ public class SearchService : ISearchService
         string? transportMode = null,
         string? startLocation = null,
         string? endLocation = null,
-        int skip = 0,
-        int take = 10)
+        int? minPopularity = null,
+        int? maxPopularity = null,
+        double? minChildFriendliness = null,
+        double? maxChildFriendliness = null)
     {
-        _logger.Info($"Search Tours for user {userId}: term='{searchTerm}', transport={transportMode}");
+        _logger.Info($"Search Tours for user {userId}: term='{searchTerm}', transport={transportMode}, pop={minPopularity}-{maxPopularity}, cf={minChildFriendliness}-{maxChildFriendliness}");
 
         var userIdGuid = Guid.Parse(userId);
         var query = _context.Tours.Where(t => t.UserId == userIdGuid);
 
-        // Search: Name + Description (LIKE - partial match)
+        // Search: Name + Description (partial match)
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
             var term = searchTerm.ToLower();
@@ -41,7 +43,7 @@ public class SearchService : ISearchService
             _logger.Info($"Applied search term filter: '{searchTerm}'");
         }
 
-        // Filter: TransportType (not TransportMode!)
+        // Filter: TransportType
         if (!string.IsNullOrWhiteSpace(transportMode))
         {
             query = query.Where(t => t.TransportType.ToString() == transportMode);
@@ -62,21 +64,42 @@ public class SearchService : ISearchService
             _logger.Info($"Applied end location filter: {endLocation}");
         }
 
-        // Get total count
-        var totalCount = await query.CountAsync();
+        // Filter: Popularity (min & max)
+        if (minPopularity.HasValue)
+        {
+            query = query.Where(t => t.Popularity >= minPopularity.Value);
+            _logger.Info($"Applied min popularity filter: {minPopularity}");
+        }
 
-        // Apply pagination
+        if (maxPopularity.HasValue)
+        {
+            query = query.Where(t => t.Popularity <= maxPopularity.Value);
+            _logger.Info($"Applied max popularity filter: {maxPopularity}");
+        }
+
+        // Filter: ChildFriendliness (min & max)
+        if (minChildFriendliness.HasValue)
+        {
+            query = query.Where(t => t.ChildFriendliness >= minChildFriendliness.Value);
+            _logger.Info($"Applied min child-friendliness filter: {minChildFriendliness}");
+        }
+
+        if (maxChildFriendliness.HasValue)
+        {
+            query = query.Where(t => t.ChildFriendliness <= maxChildFriendliness.Value);
+            _logger.Info($"Applied max child-friendliness filter: {maxChildFriendliness}");
+        }
+
+        // Get all tours
         var tours = await query
             .OrderBy(t => t.Name)
-            .Skip(skip)
-            .Take(take)
             .ToListAsync();
 
-        _logger.Info($"Search returned {tours.Count} tours (total: {totalCount})");
+        _logger.Info($"Search returned {tours.Count} tours");
 
         var result = new SearchResultDto
         {
-            TotalCount = totalCount,
+            TotalCount = tours.Count,
             Tours = tours.Select(t => new SearchTourDto
             {
                 TourId = t.TourId,

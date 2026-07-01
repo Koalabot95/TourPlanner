@@ -10,7 +10,8 @@ public interface ISearchService
         string? transportMode = null,
         string? startLocation = null,
         string? endLocation = null,
-        int skip = 0,
-        int take = 10
-    );
+        int? minPopularity = null,
+        int? maxPopularity = null,
+        double? minChildFriendliness = null,
+        double? maxChildFriendliness = null);
 }

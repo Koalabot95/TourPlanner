@@ -129,7 +129,8 @@ public class SearchServiceTests
         var result = await _searchService.SearchToursAsync(_userIdString);
 
         Assert.That(result.TotalCount, Is.EqualTo(3));
-        Assert.That(result.Tours.Count, Is.EqualTo(3));
+        Assert.That(result.Tours, Is.Not.Null);
+        Assert.That(result.Tours!.Count, Is.EqualTo(3));
     }
 
     [Test]
@@ -138,7 +139,8 @@ public class SearchServiceTests
         var result = await _searchService.SearchToursAsync(_userIdString, searchTerm: "Vienna");
 
         Assert.That(result.TotalCount, Is.EqualTo(1));
-        Assert.That(result.Tours[0].Name, Is.EqualTo("Vienna to Salzburg"));
+        Assert.That(result.Tours, Is.Not.Null);
+        Assert.That(result.Tours![0].Name, Is.EqualTo("Vienna to Salzburg"));
     }
 
     [Test]
@@ -147,7 +149,8 @@ public class SearchServiceTests
         var result = await _searchService.SearchToursAsync(_userIdString, searchTerm: "alpine");
 
         Assert.That(result.TotalCount, Is.EqualTo(1));
-        Assert.That(result.Tours[0].Name, Is.EqualTo("Vienna to Salzburg"));
+        Assert.That(result.Tours, Is.Not.Null);
+        Assert.That(result.Tours![0].Name, Is.EqualTo("Vienna to Salzburg"));
     }
 
     [Test]
@@ -156,7 +159,8 @@ public class SearchServiceTests
         var result = await _searchService.SearchToursAsync(_userIdString, transportMode: "Walking");
 
         Assert.That(result.TotalCount, Is.EqualTo(1));
-        Assert.That(result.Tours[0].TransportMode, Is.EqualTo("Walking"));
+        Assert.That(result.Tours, Is.Not.Null);
+        Assert.That(result.Tours![0].TransportMode, Is.EqualTo("Walking"));
     }
 
     [Test]
@@ -165,7 +169,8 @@ public class SearchServiceTests
         var result = await _searchService.SearchToursAsync(_userIdString, startLocation: "Vienna");
 
         Assert.That(result.TotalCount, Is.EqualTo(1));
-        Assert.That(result.Tours[0].StartLocation, Is.EqualTo("Vienna"));
+        Assert.That(result.Tours, Is.Not.Null);
+        Assert.That(result.Tours![0].StartLocation, Is.EqualTo("Vienna"));
     }
 
     [Test]
@@ -185,16 +190,32 @@ public class SearchServiceTests
         );
 
         Assert.That(result.TotalCount, Is.EqualTo(1));
-        Assert.That(result.Tours[0].Name, Is.EqualTo("Salzburg City Walk"));
+        Assert.That(result.Tours, Is.Not.Null);
+        Assert.That(result.Tours![0].Name, Is.EqualTo("Salzburg City Walk"));
     }
 
     [Test]
-    public async Task SearchToursAsync_Pagination_ReturnsPaginatedResults()
+    public async Task SearchToursAsync_FilterByMinPopularity_ReturnsMatchingTours()
     {
-        var result = await _searchService.SearchToursAsync(_userIdString, skip: 1, take: 1);
+        var result = await _searchService.SearchToursAsync(_userIdString, minPopularity: 5);
 
-        Assert.That(result.TotalCount, Is.EqualTo(3));
-        Assert.That(result.Tours.Count, Is.EqualTo(1));
+        Assert.That(result.TotalCount, Is.EqualTo(2));
+    }
+
+    [Test]
+    public async Task SearchToursAsync_FilterByMaxPopularity_ReturnsMatchingTours()
+    {
+        var result = await _searchService.SearchToursAsync(_userIdString, maxPopularity: 5);
+
+        Assert.That(result.TotalCount, Is.EqualTo(2));
+    }
+
+    [Test]
+    public async Task SearchToursAsync_FilterByChildFriendliness_ReturnsMatchingTours()
+    {
+        var result = await _searchService.SearchToursAsync(_userIdString, minChildFriendliness: 7.0);
+
+        Assert.That(result.TotalCount, Is.EqualTo(2));
     }
 
     [Test]
@@ -203,7 +224,8 @@ public class SearchServiceTests
         var result = await _searchService.SearchToursAsync(_userIdString, searchTerm: "NonExistent");
 
         Assert.That(result.TotalCount, Is.EqualTo(0));
-        Assert.That(result.Tours.Count, Is.EqualTo(0));
+        Assert.That(result.Tours, Is.Not.Null);
+        Assert.That(result.Tours!.Count, Is.EqualTo(0));
     }
 
     [Test]
@@ -212,7 +234,8 @@ public class SearchServiceTests
         var result = await _searchService.SearchToursAsync(_otherUserIdString);
 
         Assert.That(result.TotalCount, Is.EqualTo(1));
-        Assert.That(result.Tours[0].Name, Is.EqualTo("Other User Tour"));
+        Assert.That(result.Tours, Is.Not.Null);
+        Assert.That(result.Tours![0].Name, Is.EqualTo("Other User Tour"));
     }
 
     [Test]
@@ -221,7 +244,8 @@ public class SearchServiceTests
         var result = await _searchService.SearchToursAsync(_userIdString, searchTerm: "VIENNA");
 
         Assert.That(result.TotalCount, Is.EqualTo(1));
-        Assert.That(result.Tours[0].Name, Is.EqualTo("Vienna to Salzburg"));
+        Assert.That(result.Tours, Is.Not.Null);
+        Assert.That(result.Tours![0].Name, Is.EqualTo("Vienna to Salzburg"));
     }
 
     [Test]
@@ -229,7 +253,9 @@ public class SearchServiceTests
     {
         var result = await _searchService.SearchToursAsync(_userIdString);
 
-        Assert.That(result.Tours.All(t => t.Popularity >= 0), Is.True);
-        Assert.That(result.Tours.All(t => t.ChildFriendliness >= 0), Is.True);
+        Assert.That(result.Tours, Is.Not.Null);
+        Assert.That(result.Tours!.Count > 0);
+        Assert.That(result.Tours!.All(t => t.Popularity >= 0), Is.True);
+        Assert.That(result.Tours!.All(t => t.ChildFriendliness >= 0), Is.True);
     }
 }

@@ -24,15 +24,14 @@ public class SearchController : ControllerBase
         [FromQuery] string? transportMode = null,
         [FromQuery] string? startLocation = null,
         [FromQuery] string? endLocation = null,
-        [FromQuery] int skip = 0,
-        [FromQuery] int take = 10)
+        [FromQuery] int? minPopularity = null,
+        [FromQuery] int? maxPopularity = null,
+        [FromQuery] double? minChildFriendliness = null,
+        [FromQuery] double? maxChildFriendliness = null)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (string.IsNullOrEmpty(userId))
             return Unauthorized(new { message = "User not authenticated." });
-
-        if (skip < 0 || take < 1 || take > 100)
-            return BadRequest(new { message = "Invalid pagination: skip >= 0, 1 <= take <= 100" });
 
         var result = await _searchService.SearchToursAsync(
             userId,
@@ -40,8 +39,10 @@ public class SearchController : ControllerBase
             transportMode,
             startLocation,
             endLocation,
-            skip,
-            take
+            minPopularity,
+            maxPopularity,
+            minChildFriendliness,
+            maxChildFriendliness
         );
 
         return Ok(result);
